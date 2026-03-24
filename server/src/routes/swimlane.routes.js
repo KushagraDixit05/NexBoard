@@ -1,0 +1,10 @@
+const router = require('express').Router();
+const { authenticate } = require('../middleware/auth.middleware');
+const { createSwimlane, getSwimlanesByBoard, updateSwimlane, deleteSwimlane, reorderSwimlanes } = require('../controllers/swimlane.controller');
+router.use(authenticate);
+router.post('/', createSwimlane);
+router.get('/board/:boardId', getSwimlanesByBoard);
+router.patch('/reorder', reorderSwimlanes);
+router.put('/:swimlaneId', updateSwimlane);
+router.delete('/:swimlaneId', deleteSwimlane);
+module.exports = router;

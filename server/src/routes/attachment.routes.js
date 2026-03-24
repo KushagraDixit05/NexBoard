@@ -1,0 +1,10 @@
+const router = require('express').Router();
+const { authenticate } = require('../middleware/auth.middleware');
+const { upload } = require('../middleware/upload.middleware');
+const { uploadAttachment, getAttachmentsByTask, downloadAttachment, deleteAttachment } = require('../controllers/attachment.controller');
+router.use(authenticate);
+router.post('/', upload.single('file'), uploadAttachment);
+router.get('/task/:taskId', getAttachmentsByTask);
+router.get('/:attachmentId/download', downloadAttachment);
+router.delete('/:attachmentId', deleteAttachment);
+module.exports = router;

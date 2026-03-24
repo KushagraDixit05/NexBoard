@@ -1,0 +1,44 @@
+version: '3.8'
+services:
+  mongodb:
+    image: mongo:7
+    container_name: nexboard-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: nexboard
+
+  server:
+    build: ./server
+    container_name: nexboard-server
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mongodb
+    environment:
+      - MONGODB_URI=mongodb://mongodb:27017/nexboard
+      - JWT_SECRET=your-secret-key-change-in-production
+      - REFRESH_TOKEN_SECRET=your-refresh-secret-change-in-production
+      - PORT=5000
+      - CORS_ORIGIN=http://localhost:3000
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+
+  client:
+    build: ./client
+    container_name: nexboard-client
+    ports:
+      - "3000:3000"
+    depends_on:
+      - server
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:5000/api
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+
+volumes:
+  mongo-data:

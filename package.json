@@ -1,0 +1,16 @@
+{
+  "name": "nexboard",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": ["client", "server"],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "dev:client": "npm run dev -w nexboard-client",
+    "dev:server": "npm run dev -w nexboard-server",
+    "build": "npm run build -w nexboard-client",
+    "test": "npm test -w nexboard-server && npm test -w nexboard-client"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0"
+  }
+}
