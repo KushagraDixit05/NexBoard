@@ -2,16 +2,17 @@
 
 import { useEffect, useState } from 'react';
 import { useNotificationStore } from '@/store/notificationStore';
+import type { AppNotification } from '@/store/notificationStore';
 import { formatDistanceToNow } from 'date-fns';
-import { Bell, Check, Trash2, CheckCheck } from 'lucide-react';
-import type { Notification } from '@/types';
+import { Bell, Check, CheckCheck } from 'lucide-react';
 
 export default function NotificationsPage() {
-  const { notifications, loading, markAsRead, markAllAsRead, deleteNotification, fetchNotifications } = useNotificationStore();
+  const { notifications, markAsRead, markAllRead, fetchNotifications } = useNotificationStore();
   const [filter, setFilter] = useState<'all' | 'unread'>('all');
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    fetchNotifications();
+    fetchNotifications().finally(() => setIsLoading(false));
   }, [fetchNotifications]);
 
   const filteredNotifications = filter === 'unread' 
@@ -24,11 +25,11 @@ export default function NotificationsPage() {
     await markAsRead(id);
   };
 
-  const handleDelete = async (id: string) => {
-    await deleteNotification(id);
+  const handleMarkAllRead = async () => {
+    await markAllRead();
   };
 
-  const getNotificationIcon = (type: Notification['type']) => {
+  const getNotificationIcon = (type: AppNotification['type']) => {
     const iconClass = "w-4 h-4";
     switch (type) {
       case 'task_assigned':
@@ -44,7 +45,7 @@ export default function NotificationsPage() {
     }
   };
 
-  const getNotificationColor = (type: Notification['type']) => {
+  const getNotificationColor = (type: AppNotification['type']) => {
     switch (type) {
       case 'task_assigned':
         return 'bg-blue-100 text-blue-600';
@@ -71,7 +72,7 @@ export default function NotificationsPage() {
         </div>
         {unreadCount > 0 && (
           <button
-            onClick={markAllAsRead}
+            onClick={handleMarkAllRead}
             className="btn-secondary text-sm"
           >
             <CheckCheck className="w-4 h-4" />
@@ -105,7 +106,7 @@ export default function NotificationsPage() {
       </div>
 
       {/* Notifications List */}
-      {loading ? (
+      {isLoading ? (
         <div className="space-y-3">
           {[1, 2, 3].map(i => (
             <div key={i} className="card p-4 animate-pulse">
@@ -167,13 +168,6 @@ export default function NotificationsPage() {
                       <Check className="w-4 h-4" />
                     </button>
                   )}
-                  <button
-                    onClick={() => handleDelete(notification._id)}
-                    className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-500 hover:text-red-600 transition-colors"
-                    title="Delete"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
                 </div>
               </div>
             </div>

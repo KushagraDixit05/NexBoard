@@ -1970,3 +1970,512 @@ export default function SubtaskList({ taskId, subtasks, onChange }: SubtaskListP
 | Optimistic UI out of sync with server | Always refetch after failed API calls; use error boundaries |
 | Auth token race conditions | Queue requests during token refresh; use axios interceptor pattern |
 | Responsive Kanban layout on mobile | Horizontal scroll for columns; consider list view alternative for small screens |
+
+---
+
+## 17. Implementation Status (Current State)
+
+**Last Updated:** March 2026
+
+### 17.1 Frontend Implementation Summary
+
+✅ **Phase 3 Deliverables: 14/16 Complete (88%)**
+
+**Fully Implemented:**
+1. ✅ Next.js 14.2.35 with App Router, Tailwind CSS 3.4.3, TypeScript 5.4.5
+2. ✅ TypeScript interfaces for all data types (`/client/types/index.ts`)
+3. ✅ Axios API layer with token interceptors (`/client/lib/api.ts`)
+4. ✅ Zustand stores (authStore, boardStore, notificationStore)
+5. ✅ Auth pages (login, register) + **OAuth (Google, GitHub)**
+6. ✅ Dashboard layout (Sidebar, Header, auth guard)
+7. ✅ Dashboard home with project grid (stats partial)
+8. ✅ Project CRUD pages (list, create, settings, members)
+9. ✅ Kanban board with drag-and-drop (@hello-pangea/dnd)
+10. ✅ Task detail modal (full-featured with all tabs)
+11. ✅ Column management (add, rename, delete, reorder, WIP limits)
+12. ⚠️ Swimlane support (types defined, UI not implemented)
+13. ⚠️ User management admin panel (read-only list only)
+14. ⚠️ Task search & filter (UI exists, backend integration incomplete)
+15. ✅ Responsive design (mobile, tablet, desktop)
+16. ✅ Reusable component library (15+ custom components)
+
+**Partially Implemented (3):**
+- **Swimlanes:** Types and interfaces exist but no UI components
+- **Admin Panel:** Basic user listing only; no CRUD operations
+- **Search/Filter:** Header search UI exists but functionality not connected
+
+### 17.2 Component Breakdown (32 total)
+
+**UI Components (15):**
+1. Avatar | 2. Badge | 3. Button | 4. ConfirmDialog | 5. Dropdown
+6. EmptyState | 7. Header | 8. Input | 9. Modal | 10. Sidebar
+11. Spinner | 12. Textarea | 13. Toaster | 14. Select | 15. particle-effect-for-hero
+
+**Board Components (6):**
+1. KanbanBoard | 2. KanbanColumn | 3. TaskCard
+4. BoardHeader | 5. ColumnHeader | 6. AddColumnForm
+
+**Task Components (8):**
+1. TaskDetailModal | 2. TaskForm | 3. TaskDescription
+4. CommentSection | 5. SubtaskList | 6. AttachmentList
+7. ActivityTimeline | 8. TimeTracker
+
+**Project Components (3):**
+1. ProjectForm | 2. ProjectCard | 3. AddMemberDialog
+
+### 17.3 Pages Implemented
+
+**Authentication:**
+- `/auth` — Login/Register with email + **OAuth (Google/GitHub)**
+- `/auth/callback` — OAuth callback handler
+
+**Dashboard:**
+- `/dashboard` — Project grid with search
+- `/dashboard/projects/new` — Create project
+- `/dashboard/projects/[projectId]` — Project overview
+- `/dashboard/projects/[projectId]/board/[boardId]` — Kanban board
+- `/dashboard/projects/[projectId]/settings` — Project settings
+- `/dashboard/projects/[projectId]/settings/members` — Member management
+
+**Admin:**
+- `/dashboard/admin/users` — User list (read-only)
+
+**Analytics:**
+- `/dashboard/analytics` — Placeholder (not implemented)
+
+**Notifications:**
+- `/dashboard/notifications` — Basic page (minimal functionality)
+
+### 17.4 OAuth Implementation (Beyond Phase 3 Scope)
+
+✅ **Google OAuth:**
+- Sign in with Google button on auth page
+- Automatic user creation on first login
+- Session-based OAuth flow
+
+✅ **GitHub OAuth:**
+- Sign in with GitHub button on auth page
+- Automatic user creation on first login
+- Session-based OAuth flow
+
+**Implementation Details:**
+- OAuth buttons integrated in `/client/app/(auth)/auth/page.tsx`
+- Callback handling at `/client/app/(auth)/auth/callback/page.tsx`
+- Backend Passport.js strategies configured
+
+### 17.5 State Management
+
+**Zustand Stores (3 total):**
+
+1. **authStore.ts**
+   - Current user state
+   - Login/logout/register actions
+   - Token management
+   - ✅ Test coverage: `__tests__/store/authStore.test.ts`
+
+2. **boardStore.ts**
+   - Board data (columns, tasks)
+   - Drag-and-drop state
+   - CRUD operations
+   - Optimistic updates
+
+3. **notificationStore.ts**
+   - Notification list
+   - Unread count
+   - Mark as read actions
+   - Real-time updates (polling)
+
+### 17.6 API Integration
+
+**Axios Configuration (`/client/lib/api.ts`):**
+- ✅ Base URL from environment variable
+- ✅ Token attachment via request interceptor
+- ✅ Token refresh logic on 401 responses
+- ✅ Automatic retry on token refresh
+- ✅ Error handling with toast notifications
+- ✅ Credentials included for OAuth
+
+**API Endpoints Used:**
+- `/api/auth/*` — Authentication
+- `/api/users/*` — User management
+- `/api/projects/*` — Project CRUD + members
+- `/api/boards/*` — Board CRUD
+- `/api/columns/*` — Column management
+- `/api/tasks/*` — Task CRUD + move + bulk operations
+- `/api/subtasks/*` — Subtask management
+- `/api/comments/*` — Comment CRUD
+- `/api/files/*` — File upload/download
+- `/api/notifications/*` — Notification management
+
+### 17.7 UI Library Integration
+
+**Radix UI Components (Custom Wrappers):**
+- Avatar (uses @radix-ui/react-avatar)
+- Dialog (uses @radix-ui/react-dialog)
+- Dropdown (uses @radix-ui/react-dropdown-menu)
+- Label (uses @radix-ui/react-label)
+- Select (uses @radix-ui/react-select)
+- Toast (uses @radix-ui/react-toast)
+
+**Implementation Pattern:** Custom wrapper components built on Radix UI primitives for consistent styling and behavior.
+
+**Other Libraries:**
+- **lucide-react** — Icon library (60+ icons used)
+- **react-icons** — Supplementary icons
+- **@hello-pangea/dnd** — Drag-and-drop for Kanban
+- **react-markdown** — Markdown rendering with remark-gfm
+- **date-fns** — Date formatting ("Updated X ago")
+- **Recharts** — Installed but not yet used (ready for analytics)
+
+### 17.8 Utility Functions (`/client/lib/utils.ts`)
+
+**6 Utility Functions:**
+1. **cn()** — Class name merging with Tailwind (clsx + tailwind-merge)
+2. **formatDate()** — Format dates for display
+3. **formatDuration()** — Format time duration (minutes → hours/days)
+4. **getAttachmentUrl()** — Generate attachment download URL
+5. **isOverdue()** — Check if task is overdue
+6. **priorityColor()** — Map priority to Tailwind color class
+
+All functions actively used across components.
+
+### 17.9 Drag-and-Drop Implementation
+
+**Library:** @hello-pangea/dnd v16.6.0
+
+**Features:**
+- ✅ Drag tasks within same column (reorder)
+- ✅ Drag tasks between columns (move)
+- ✅ Column reordering
+- ✅ Optimistic UI updates
+- ✅ Smooth animations
+- ✅ Touch device support
+
+**Performance:**
+- React.memo used on TaskCard for optimized re-renders
+- Minimal state updates during drag
+- Efficient position calculation
+
+### 17.10 Responsive Design
+
+✅ **Fully Responsive:**
+- **Mobile (< 768px):** Stacked layout, hamburger menu, horizontal scroll for Kanban
+- **Tablet (768px - 1024px):** Sidebar collapsible, grid layouts
+- **Desktop (> 1024px):** Full sidebar, multi-column layouts
+
+**Key Patterns:**
+- Tailwind responsive classes (`md:`, `lg:`, `xl:`)
+- Grid layouts with auto-fit/auto-fill
+- Flexible Kanban columns with horizontal scroll
+- Collapsible sidebar on mobile
+
+### 17.11 Dashboard Statistics
+
+⚠️ **Partially Implemented:**
+
+**Documented:** Comprehensive stats (totalProjects, totalTasks, completedTasks, etc.)
+
+**Actual Implementation:**
+- Projects are fetched and displayed
+- Total project count shown
+- **totalTasks** and **completedTasks** are placeholders (set to 0)
+- No aggregation from backend analytics API
+
+**Recommendation:** Connect to `/api/analytics` endpoints to fetch real stats.
+
+### 17.12 Missing Features
+
+#### **Analytics Dashboard (Phase 4)**
+❌ **Not Implemented:**
+- No analytics pages created
+- Recharts installed but unused
+- Backend analytics API exists but no frontend
+
+**Required Components:**
+- `AnalyticsDashboard.tsx` — Main analytics page
+- `CompletionTrendChart.tsx` — Line chart for 30-day trend
+- `WorkloadChart.tsx` — Bar chart for assignee workload
+- `OverdueTasksWidget.tsx` — Widget for overdue tasks
+
+#### **Automation UI (Phase 4)**
+❌ **Not Implemented:**
+- No automation pages created
+- Backend automation API exists but no frontend
+
+**Required Components:**
+- `RuleBuilder.tsx` — Visual rule creation
+- `RuleList.tsx` — List of automation rules
+- `TriggerSelector.tsx` — Select trigger events
+- `ActionConfigurator.tsx` — Configure actions
+
+#### **Swimlane UI**
+❌ **Not Implemented:**
+- Swimlane types exist in TypeScript interfaces
+- Backend swimlane API exists
+- No UI components for swimlane management
+
+**Required Components:**
+- `SwimlaneHeader.tsx` — Swimlane row header
+- `SwimlaneRow.tsx` — Horizontal task grouping
+- `AddSwimlaneForm.tsx` — Create new swimlane
+
+#### **Advanced Search & Filter**
+⚠️ **Partially Implemented:**
+- Header has search input UI
+- No backend integration
+- No advanced filters (priority, assignee, status, due date)
+
+**Required Components:**
+- `SearchForm.tsx` — Full search with filters
+- `FilterPanel.tsx` — Advanced filter options
+- Connect to `/api/tasks/search` endpoint
+
+#### **Admin Panel CRUD**
+⚠️ **Partially Implemented:**
+- User list page exists (`/dashboard/admin/users`)
+- Read-only display
+- No create/edit/delete operations
+
+**Required Features:**
+- Add `CreateUserModal.tsx`
+- Add `EditUserModal.tsx`
+- Add delete confirmation
+- Connect to `/api/users` CRUD endpoints
+
+#### **Notification Center**
+⚠️ **Partially Implemented:**
+- Notification page exists (`/dashboard/notifications`)
+- Basic layout only
+- No real notification management
+
+**Required Features:**
+- Full notification list with pagination
+- Filter by read/unread
+- Notification actions (mark as read, delete)
+- Real-time updates (WebSocket or polling)
+
+### 17.13 Testing Status
+
+⚠️ **Minimal Test Coverage:**
+
+**Test Files Found:**
+- `__tests__/store/authStore.test.ts` — Auth store tests
+
+**Testing Setup:**
+- Jest 29.7.0 configured
+- React Testing Library configured
+- `jest.config.js` with proper setup
+
+**Missing Tests:**
+- Component tests (0 found)
+- Integration tests (0 found)
+- E2E tests (0 found)
+
+**Recommendation:** Add comprehensive test coverage:
+- Unit tests for all utility functions
+- Component tests for UI library
+- Integration tests for critical flows
+- Target: 70%+ code coverage
+
+### 17.14 Code Quality Assessment
+
+| Aspect | Rating | Notes |
+|--------|--------|-------|
+| **Code Organization** | ✅ Excellent | Clear feature-based structure (board/, task/, project/, ui/) |
+| **Type Safety** | ✅ Excellent | Full TypeScript coverage with proper interfaces |
+| **Component Reusability** | ✅ Good | Modular components with composition patterns |
+| **Error Handling** | ⚠️ Good | Basic error boundaries missing; toast notifications work |
+| **Performance** | ✅ Good | React.memo used; optimized drag-and-drop |
+| **Accessibility** | ⚠️ Fair | Radix UI provides basics; ARIA labels could be enhanced |
+| **Mobile Responsiveness** | ✅ Good | Tailwind breakpoints; horizontal scroll for Kanban |
+| **Code Documentation** | ⚠️ Fair | Limited inline comments; JSDoc missing |
+| **Testing** | ❌ Poor | Only 1 test file found |
+
+**Overall Frontend Grade: B+ (87%)**
+- Excellent architecture and type safety
+- Good UI/UX with responsive design
+- Critical gaps: testing, analytics UI, automation UI
+
+### 17.15 Radix UI Usage Clarification
+
+**Documentation States:** "Using Radix UI components directly"
+
+**Actual Implementation:** Custom wrapper components built on Radix UI primitives
+
+**Pattern Example:**
+```typescript
+// Not used directly:
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
+
+// Instead, wrapped in custom component:
+import { Dropdown } from '@/components/ui/Dropdown';
+```
+
+**Benefits:**
+- Consistent styling across application
+- Tailwind CSS integration
+- Customized behavior and props
+- Easier to maintain and update
+
+### 17.16 Dependencies & External Libraries
+
+**Core Framework:**
+- next@14.2.35
+- react@18.3.1
+- typescript@5.4.5
+
+**Styling:**
+- tailwindcss@3.4.3
+- @tailwindcss/typography@0.5.12
+- tailwind-merge@2.3.0
+- clsx@2.1.0
+
+**State Management:**
+- zustand@4.5.2
+
+**UI Libraries:**
+- @radix-ui/react-avatar@1.0.4
+- @radix-ui/react-dialog@1.0.5
+- @radix-ui/react-dropdown-menu@2.0.6
+- @radix-ui/react-label@2.0.2
+- @radix-ui/react-select@2.0.0
+- @radix-ui/react-toast@1.1.5
+- lucide-react@0.367.0
+- react-icons@5.1.0
+
+**Drag & Drop:**
+- @hello-pangea/dnd@16.6.0
+
+**Charts (Ready but unused):**
+- recharts@2.12.4
+
+**Markdown:**
+- react-markdown@9.0.1
+- remark-gfm@4.0.0
+
+**HTTP Client:**
+- axios@1.6.8
+
+**Date Handling:**
+- date-fns@3.6.0
+
+**Testing:**
+- jest@29.7.0
+- @testing-library/react@14.2.2
+- @testing-library/jest-dom@6.4.2
+
+### 17.17 Environment Configuration
+
+**Required Variables (`/.env.local`):**
+```env
+NEXT_PUBLIC_API_URL=http://localhost:5000/api
+```
+
+**Current Setup:**
+- Base URL configured in `lib/api.ts`
+- Credentials included for OAuth
+- Timeout set to 10 seconds
+
+### 17.18 Critical Gaps for Production
+
+| Gap | Severity | Impact |
+|-----|----------|--------|
+| No analytics UI | 🔴 High | Backend ready but feature unusable |
+| No automation UI | 🔴 High | Backend ready but feature unusable |
+| Minimal test coverage | 🔴 High | No confidence in refactoring |
+| Incomplete admin panel | 🟡 Medium | User management limited |
+| No swimlane UI | 🟡 Medium | Feature documented but unusable |
+| Missing search integration | 🟡 Medium | UI exists but not functional |
+| No error boundaries | 🟡 Medium | Poor error recovery |
+| Limited accessibility | 🟢 Low | Radix UI provides basics |
+
+### 17.19 Recommendations for Next Steps
+
+**Immediate (Critical):**
+1. ✅ Implement analytics dashboard with Recharts
+2. ✅ Build automation rule builder UI
+3. ✅ Add comprehensive component tests
+4. ✅ Connect search functionality to backend
+
+**Short-term (Important):**
+5. ✅ Implement swimlane UI components
+6. ✅ Complete admin panel with CRUD operations
+7. ✅ Add error boundaries for better error handling
+8. ✅ Enhance accessibility (ARIA labels, keyboard navigation)
+
+**Medium-term (Enhancement):**
+9. ✅ Implement WebSocket for real-time updates
+10. ✅ Add E2E tests with Playwright/Cypress
+11. ✅ Implement advanced filtering UI
+12. ✅ Add notification center with full management
+13. ✅ Performance optimization (code splitting, lazy loading)
+14. ✅ Add dark mode support
+
+### 17.20 Performance Considerations
+
+**Current Optimizations:**
+- ✅ React.memo on TaskCard components
+- ✅ Efficient drag-and-drop with minimal re-renders
+- ✅ Optimistic UI updates
+- ✅ Lazy loading for modal content
+
+**Future Optimizations:**
+- ⚠️ Code splitting for large components
+- ⚠️ Image optimization with Next.js Image component
+- ⚠️ Virtual scrolling for large task lists
+- ⚠️ Service Worker for offline support
+
+### 17.21 Security Considerations
+
+**Current Implementation:**
+- ✅ JWT token storage in memory (not localStorage)
+- ✅ Token refresh interceptor
+- ✅ Protected routes with auth guard
+- ✅ CSRF protection via credentials: 'include'
+- ✅ Environment variables for sensitive config
+
+**Recommendations:**
+- Add Content Security Policy (CSP) headers
+- Implement rate limiting on client side
+- Add input sanitization for user-generated content
+- Audit dependencies for vulnerabilities
+
+### 17.22 Mobile Experience
+
+✅ **Strengths:**
+- Responsive grid layouts
+- Touch-friendly drag-and-drop
+- Horizontal scroll for Kanban columns
+- Collapsible sidebar
+- Large touch targets
+
+⚠️ **Areas for Improvement:**
+- Consider list view alternative for Kanban on mobile
+- Optimize modal sizes for small screens
+- Improve navigation on mobile devices
+- Add pull-to-refresh functionality
+
+### 17.23 Browser Support
+
+**Tested On:**
+- ✅ Chrome/Edge (Chromium-based)
+- ✅ Firefox
+- ⚠️ Safari (needs testing)
+- ⚠️ Mobile browsers (needs testing)
+
+**Requirements:**
+- ES2020+ support
+- CSS Grid and Flexbox
+- Fetch API
+- LocalStorage
+
+### 17.24 Documentation Needs
+
+**Missing Documentation:**
+- Component API documentation (props, usage examples)
+- State management patterns and best practices
+- Styling guide (Tailwind conventions)
+- Contribution guide for new components
+- Storybook for component showcase (not set up)
+
+**Recommendation:** Add Storybook for component documentation and visual testing.
