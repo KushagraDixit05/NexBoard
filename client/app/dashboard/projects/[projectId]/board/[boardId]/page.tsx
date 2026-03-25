@@ -3,7 +3,7 @@
 import { useParams } from 'next/navigation';
 import KanbanBoard from '@/components/board/KanbanBoard';
 
-export default function BoardPage() {
+export default function KanbanBoardPage() {
   const params    = useParams<{ projectId: string; boardId: string }>();
   const projectId = params.projectId;
   const boardId   = params.boardId;

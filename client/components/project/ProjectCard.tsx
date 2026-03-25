@@ -10,7 +10,7 @@ interface ProjectCardProps {
 export default function ProjectCard({ project }: ProjectCardProps) {
   return (
     <Link
-      href={`/projects/${project._id}`}
+      href={`/dashboard/projects/${project._id}`}
       className="card p-5 flex flex-col gap-3 hover:shadow-card-hover transition-shadow group"
     >
       <div className="flex items-center gap-3">

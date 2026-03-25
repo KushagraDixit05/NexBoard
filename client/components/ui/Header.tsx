@@ -15,7 +15,7 @@ export default function Header() {
 
   const handleSearch = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && searchQuery.trim()) {
-      router.push(`/projects?q=${encodeURIComponent(searchQuery.trim())}`);
+      router.push(`/dashboard/projects?q=${encodeURIComponent(searchQuery.trim())}`);
     }
   };
 
@@ -38,7 +38,7 @@ export default function Header() {
 
       {/* Notifications */}
       <button
-        onClick={() => router.push('/notifications')}
+        onClick={() => router.push('/dashboard/notifications')}
         className="relative p-2 rounded-lg hover:bg-gray-100 transition-colors"
         title="Notifications"
       >

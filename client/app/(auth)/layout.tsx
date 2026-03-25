@@ -1,11 +1,10 @@
+import { AntiGravityCanvas } from '@/components/ui/particle-effect-for-hero';
+
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-100 to-blue-50">
-      <div className="w-full max-w-md p-4">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-primary-600">NexBoard</h1>
-          <p className="text-gray-500 text-sm mt-1">Team project management</p>
-        </div>
+    <div className="relative min-h-screen flex items-center justify-center bg-black overflow-hidden selection:bg-blue-500 selection:text-white">
+      <AntiGravityCanvas />
+      <div className="relative z-10 w-full flex justify-center pointer-events-none min-h-screen items-center">
         {children}
       </div>
     </div>

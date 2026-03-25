@@ -12,6 +12,9 @@ const rateLimiter = require('./middleware/rateLimiter.middleware');
 require('./services/automation.service');
 require('./services/notification.service');
 
+const passport = require('./config/passport.config');
+const session = require('express-session');
+
 const app = express();
 
 // --- Global Middleware ---
@@ -22,6 +25,14 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(rateLimiter);
+
+app.use(session({
+  secret: process.env.JWT_SECRET || 'fallback_secret',
+  resave: false,
+  saveUninitialized: false,
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 
 // --- API Routes ---
 app.use('/api/auth',          require('./routes/auth.routes'));

@@ -1618,7 +1618,7 @@ export default function DashboardPage() {
 
 ## 11. Board Page (Kanban View)
 
-### 11.1 Board Page (`client/app/(dashboard)/projects/[projectId]/board/[boardId]/page.tsx`)
+### 11.1 Board Page (`client/app/dashboard/projects/[projectId]/board/[boardId]/page.tsx`)
 
 ```typescript
 'use client';

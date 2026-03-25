@@ -18,9 +18,15 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: [true, 'Password is required'],
     minlength: [8, 'Password must be at least 8 characters'],
   },
+  authProvider: {
+    type: String,
+    enum: ['local', 'google', 'github'],
+    default: 'local',
+  },
+  googleId: { type: String, sparse: true, unique: true },
+  githubId: { type: String, sparse: true, unique: true },
   role: {
     type: String,
     enum: ['admin', 'manager', 'user'],

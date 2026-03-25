@@ -11,7 +11,7 @@ import AddMemberDialog from '@/components/project/AddMemberDialog';
 import ConfirmDialog from '@/components/ui/ConfirmDialog';
 import { UserPlus, Trash2 } from 'lucide-react';
 
-export default function MembersPage() {
+export default function ProjectMembersPage() {
   const { projectId } = useParams<{ projectId: string }>();
   const [project, setProject]       = useState<Project | null>(null);
   const [showAdd, setShowAdd]       = useState(false);

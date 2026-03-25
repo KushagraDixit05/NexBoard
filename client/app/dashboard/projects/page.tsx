@@ -9,7 +9,7 @@ import Modal from '@/components/ui/Modal';
 import { Plus, FolderKanban } from 'lucide-react';
 import type { Project } from '@/types';
 
-export default function ProjectsPage() {
+export default function ProjectsListPage() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading]   = useState(true);
   const [showCreate, setShowCreate] = useState(false);

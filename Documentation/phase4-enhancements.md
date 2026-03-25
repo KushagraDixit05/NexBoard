@@ -1027,7 +1027,7 @@ module.exports = router;
 ### 2.4 Analytics Dashboard UI
 
 ```typescript
-// client/app/(dashboard)/projects/[projectId]/analytics/page.tsx
+// client/app/dashboard/projects/[projectId]/analytics/page.tsx
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -1903,7 +1903,7 @@ module.exports = emailService;
 ### 4.5 Notification Center UI
 
 ```typescript
-// client/app/(dashboard)/notifications/page.tsx
+// client/app/dashboard/notifications/page.tsx
 'use client';
 
 import { useEffect } from 'react';

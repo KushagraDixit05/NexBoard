@@ -10,7 +10,7 @@ import Avatar from '@/components/ui/Avatar';
 import Badge from '@/components/ui/Badge';
 import { format } from 'date-fns';
 
-export default function ProjectPage() {
+export default function ProjectDetailsPage() {
   const { projectId } = useParams<{ projectId: string }>();
   const [project, setProject]   = useState<Project | null>(null);
   const [boards, setBoards]     = useState<Board[]>([]);

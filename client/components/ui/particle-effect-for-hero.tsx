@@ -45,7 +45,7 @@ const REPULSION_STRENGTH = 1.2;
 const randomRange = (min: number, max: number) => Math.random() * (max - min) + min;
 
 // --- Components ---
-const AntiGravityCanvas: React.FC = () => {
+export const AntiGravityCanvas: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [debugInfo, setDebugInfo] = useState({ count: 0, fps: 0 });
@@ -321,9 +321,9 @@ const Navigation: React.FC = () => {
         <span className="text-white font-medium tracking-wide text-lg">NexBoard</span>
       </div>
       <div className="hidden md:flex space-x-8 text-sm font-medium text-white/70">
-        <Link href="/login" className="hover:text-white transition-colors">Sign In</Link>
+        <Link href="/auth" className="hover:text-white transition-colors">Sign In</Link>
       </div>
-      <Link href="/login" className="text-white/80 hover:text-white transition-colors md:hidden">
+      <Link href="/auth" className="text-white/80 hover:text-white transition-colors md:hidden">
         <ArrowRight size={24} />
       </Link>
     </nav>
@@ -349,7 +349,7 @@ const HeroContent: React.FC = () => {
         </p>
 
         <div className="pt-8 pointer-events-auto">
-          <Link href="/register" className="group relative inline-flex items-center gap-3 px-8 py-4 bg-white text-black rounded-full font-bold tracking-wide overflow-hidden transition-transform hover:scale-105 active:scale-95">
+          <Link href="/auth" className="group relative inline-flex items-center gap-3 px-8 py-4 bg-white text-black rounded-full font-bold tracking-wide overflow-hidden transition-transform hover:scale-105 active:scale-95">
             <span className="relative z-10">Get Started</span>
             <ArrowRight className="w-4 h-4 relative z-10 group-hover:translate-x-1 transition-transform" />
             <div className="absolute inset-0 bg-blue-500 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300 ease-out opacity-10"></div>

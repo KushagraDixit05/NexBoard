@@ -10,14 +10,14 @@ import {
 import { useState } from 'react';
 
 const navigation = [
-  { name: 'Dashboard',     href: '/',              icon: LayoutDashboard },
-  { name: 'Projects',      href: '/projects',      icon: FolderKanban },
-  { name: 'Notifications', href: '/notifications', icon: Bell },
+  { name: 'Dashboard',     href: '/dashboard',              icon: LayoutDashboard },
+  { name: 'Projects',      href: '/dashboard/projects',      icon: FolderKanban },
+  { name: 'Notifications', href: '/dashboard/notifications', icon: Bell },
 ];
 
 const adminNav = [
-  { name: 'Users',    href: '/admin/users',    icon: Users },
-  { name: 'Settings', href: '/admin/settings', icon: Settings },
+  { name: 'Users',    href: '/dashboard/admin/users',    icon: Users },
+  { name: 'Settings', href: '/dashboard/admin/settings', icon: Settings },
 ];
 
 export default function Sidebar() {
@@ -28,11 +28,11 @@ export default function Sidebar() {
 
   const handleLogout = async () => {
     await logout();
-    router.push('/login');
+    router.push('/auth');
   };
 
   const isActive = (href: string) =>
-    href === '/' ? pathname === '/' : pathname.startsWith(href);
+    href === '/dashboard' ? pathname === '/dashboard' : pathname.startsWith(href);
 
   return (
     <aside className={`${collapsed ? 'w-16' : 'w-64'} bg-white border-r border-gray-200

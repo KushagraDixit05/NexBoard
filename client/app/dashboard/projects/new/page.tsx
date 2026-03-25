@@ -5,12 +5,12 @@ import Link from 'next/link';
 import ProjectForm from '@/components/project/ProjectForm';
 import { ArrowLeft } from 'lucide-react';
 
-export default function NewProjectPage() {
+export default function CreateProjectPage() {
   const router = useRouter();
   return (
     <div className="max-w-lg">
       <div className="flex items-center gap-3 mb-6">
-        <Link href="/projects" className="btn-ghost p-2">
+        <Link href="/dashboard/projects" className="btn-ghost p-2">
           <ArrowLeft className="w-4 h-4" />
         </Link>
         <div>
@@ -20,8 +20,8 @@ export default function NewProjectPage() {
       </div>
       <div className="card p-6">
         <ProjectForm
-          onSuccess={(project) => router.push(`/projects/${project._id}`)}
-          onCancel={() => router.push('/projects')}
+          onSuccess={(project) => router.push(`/dashboard/projects/${project._id}`)}
+          onCancel={() => router.push('/dashboard/projects')}
         />
       </div>
     </div>

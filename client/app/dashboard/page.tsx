@@ -62,7 +62,7 @@ export default function DashboardPage() {
       <div>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold text-gray-900">Your Projects</h2>
-          <Link href="/projects/new" className="btn-primary">
+          <Link href="/dashboard/projects/new" className="btn-primary">
             <Plus className="w-4 h-4" /> New Project
           </Link>
         </div>
@@ -81,7 +81,7 @@ export default function DashboardPage() {
             <FolderKanban className="w-12 h-12 text-gray-300 mx-auto mb-4" />
             <h3 className="text-gray-900 font-semibold mb-1">No projects yet</h3>
             <p className="text-sm text-gray-500 mb-6">Create your first project to get started</p>
-            <Link href="/projects/new" className="btn-primary">
+            <Link href="/dashboard/projects/new" className="btn-primary">
               <Plus className="w-4 h-4" /> Create Project
             </Link>
           </div>

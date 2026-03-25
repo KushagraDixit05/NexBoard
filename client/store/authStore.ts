@@ -7,8 +7,6 @@ interface AuthState {
   isLoading:       boolean;
   isAuthenticated: boolean;
 
-  login:         (payload: LoginPayload) => Promise<void>;
-  register:      (payload: RegisterPayload) => Promise<void>;
   logout:        () => Promise<void>;
   fetchMe:       () => Promise<void>;
   updateProfile: (data: Partial<User>) => Promise<void>;
@@ -18,24 +16,6 @@ export const useAuthStore = create<AuthState>((set) => ({
   user:            null,
   isLoading:       true,
   isAuthenticated: false,
-
-  login: async (payload) => {
-    const { data } = await api.post<AuthResponse>('/auth/login', payload);
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('accessToken', data.accessToken);
-      localStorage.setItem('refreshToken', data.refreshToken);
-    }
-    set({ user: data.user, isAuthenticated: true });
-  },
-
-  register: async (payload) => {
-    const { data } = await api.post<AuthResponse>('/auth/register', payload);
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('accessToken', data.accessToken);
-      localStorage.setItem('refreshToken', data.refreshToken);
-    }
-    set({ user: data.user, isAuthenticated: true });
-  },
 
   logout: async () => {
     try { await api.post('/auth/logout'); } catch { /* ignore */ }

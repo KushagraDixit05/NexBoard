@@ -33,12 +33,12 @@ export default function ProjectSettingsPage() {
 
   const handleArchive = async () => {
     await api.patch(`/projects/${projectId}/archive`);
-    router.push('/projects');
+    router.push('/dashboard/projects');
   };
 
   const handleDelete = async () => {
     await api.delete(`/projects/${projectId}`);
-    router.push('/projects');
+    router.push('/dashboard/projects');
   };
 
   if (!project) return <div className="animate-pulse h-96 bg-gray-100 rounded-xl" />;
