@@ -42,23 +42,23 @@ function CallbackContent() {
   }, [router, searchParams]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+    <div className="min-h-screen flex items-center justify-center bg-background">
       <div className="card p-8 text-center max-w-sm w-full mx-4">
         {error ? (
           <>
-            <div className="w-12 h-12 mx-auto bg-danger-100 rounded-full flex items-center justify-center mb-4">
-              <span className="text-danger-600 font-bold text-xl">!</span>
+            <div className="w-12 h-12 mx-auto bg-destructive/10 rounded-full flex items-center justify-center mb-4">
+              <span className="text-destructive font-bold text-xl">!</span>
             </div>
-            <h2 className="text-xl font-bold text-gray-900 mb-2">Authentication Error</h2>
-            <p className="text-sm text-gray-500">{error}</p>
+            <h2 className="text-xl font-bold text-foreground mb-2">Authentication Error</h2>
+            <p className="text-sm text-muted-foreground">{error}</p>
           </>
         ) : (
           <>
-            <div className="w-12 h-12 mx-auto bg-success-100 rounded-full flex items-center justify-center mb-4">
-              <div className="w-6 h-6 border-2 border-success-600 border-t-transparent rounded-full animate-spin" />
+            <div className="w-12 h-12 mx-auto bg-success/10 rounded-full flex items-center justify-center mb-4">
+              <div className="w-6 h-6 border-2 border-success border-t-transparent rounded-full animate-spin" />
             </div>
-            <h2 className="text-xl font-bold text-gray-900 mb-2">Completing Sign In</h2>
-            <p className="text-sm text-gray-500">Securely routing you to the dashboard...</p>
+            <h2 className="text-xl font-bold text-foreground mb-2">Completing Sign In</h2>
+            <p className="text-sm text-muted-foreground">Securely routing you to the dashboard...</p>
           </>
         )}
       </div>
@@ -69,13 +69,13 @@ function CallbackContent() {
 export default function OAuthCallbackPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="card p-8 text-center max-w-sm w-full mx-4">
-          <div className="w-12 h-12 mx-auto bg-success-100 rounded-full flex items-center justify-center mb-4">
-            <div className="w-6 h-6 border-2 border-success-600 border-t-transparent rounded-full animate-spin" />
+          <div className="w-12 h-12 mx-auto bg-success/10 rounded-full flex items-center justify-center mb-4">
+            <div className="w-6 h-6 border-2 border-success border-t-transparent rounded-full animate-spin" />
           </div>
-          <h2 className="text-xl font-bold text-gray-900 mb-2">Loading...</h2>
-          <p className="text-sm text-gray-500">Please wait</p>
+          <h2 className="text-xl font-bold text-foreground mb-2">Loading...</h2>
+          <p className="text-sm text-muted-foreground">Please wait</p>
         </div>
       </div>
     }>

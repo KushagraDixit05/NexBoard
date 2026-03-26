@@ -20,7 +20,7 @@ export default function KanbanColumn({ column, boardId, projectId, onTaskClick }
   const isOverLimit = column.taskLimit > 0 && column.tasks.length >= column.taskLimit;
 
   return (
-    <div className="flex-shrink-0 w-72 flex flex-col bg-gray-100 rounded-xl max-h-full">
+    <div className="flex-shrink-0 w-72 flex flex-col bg-muted rounded-lg max-h-full">
       <ColumnHeader column={column} taskCount={column.tasks.length} isOverLimit={isOverLimit} />
 
       <Droppable droppableId={column._id}>
@@ -29,8 +29,8 @@ export default function KanbanColumn({ column, boardId, projectId, onTaskClick }
             ref={provided.innerRef}
             {...provided.droppableProps}
             className={`flex-1 min-h-[120px] max-h-[calc(100vh-16rem)] overflow-y-auto
-              p-2 space-y-2 transition-colors rounded-lg
-              ${snapshot.isDraggingOver ? 'bg-primary-50' : ''}`}
+              p-2 space-y-2 transition-colors rounded-md
+              ${snapshot.isDraggingOver ? 'bg-accent' : ''}`}
           >
             {column.tasks.map((task, index) => (
               <TaskCard key={task._id} task={task} index={index} onClick={() => onTaskClick(task)} />
@@ -40,7 +40,7 @@ export default function KanbanColumn({ column, boardId, projectId, onTaskClick }
         )}
       </Droppable>
 
-      <div className="p-2 border-t border-gray-200">
+      <div className="p-2 border-t border-border">
         {showAddTask ? (
           <TaskForm
             columnId={column._id}
@@ -52,8 +52,8 @@ export default function KanbanColumn({ column, boardId, projectId, onTaskClick }
           <button
             onClick={() => setShowAddTask(true)}
             disabled={isOverLimit}
-            className="w-full py-1.5 text-sm text-gray-500 hover:text-gray-700 hover:bg-white
-                       rounded-lg transition-colors flex items-center gap-1.5 px-2
+            className="w-full py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-card
+                       rounded-md transition-colors flex items-center gap-1.5 px-2
                        disabled:opacity-40 disabled:cursor-not-allowed"
           >
             <Plus className="w-4 h-4" /> Add task

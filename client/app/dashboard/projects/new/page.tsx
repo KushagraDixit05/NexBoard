@@ -14,8 +14,8 @@ export default function CreateProjectPage() {
           <ArrowLeft className="w-4 h-4" />
         </Link>
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">New Project</h1>
-          <p className="text-sm text-gray-500">Set up a new project workspace</p>
+          <h1 className="text-2xl font-bold text-foreground">New Project</h1>
+          <p className="text-sm text-muted-foreground">Set up a new project workspace</p>
         </div>
       </div>
       <div className="card p-6">

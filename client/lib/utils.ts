@@ -51,10 +51,10 @@ export function isOverdue(dueDate: string | undefined): boolean {
  */
 export function priorityColor(priority: string): string {
   switch (priority) {
-    case 'urgent': return 'text-red-600 bg-red-50';
-    case 'high':   return 'text-orange-600 bg-orange-50';
-    case 'medium': return 'text-yellow-600 bg-yellow-50';
-    case 'low':    return 'text-green-600 bg-green-50';
-    default:       return 'text-gray-600 bg-gray-50';
+    case 'urgent': return 'text-destructive bg-destructive/10';
+    case 'high':   return 'text-warning bg-warning/10';
+    case 'medium': return 'text-warning bg-warning/10';
+    case 'low':    return 'text-success bg-success/10';
+    default:       return 'text-muted-foreground bg-muted';
   }
 }

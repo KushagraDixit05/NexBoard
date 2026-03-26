@@ -24,9 +24,9 @@ const icons = {
 };
 
 const styles = {
-  success: 'bg-green-50 border-green-200 text-green-800',
-  error:   'bg-danger-50 border-danger-200 text-danger-800',
-  info:    'bg-blue-50 border-blue-200 text-blue-800',
+  success: 'bg-success/10 border-success/30 text-success',
+  error:   'bg-destructive/10 border-destructive/30 text-destructive',
+  info:    'bg-info/10 border-info/30 text-info',
 };
 
 export default function Toaster({ children }: { children?: React.ReactNode }) {

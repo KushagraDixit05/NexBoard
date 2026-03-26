@@ -12,8 +12,8 @@ const sizes = {
 };
 
 const colors = [
-  'bg-blue-500', 'bg-green-500', 'bg-purple-500', 'bg-orange-500',
-  'bg-pink-500',  'bg-teal-500',  'bg-indigo-500', 'bg-rose-500',
+  'bg-primary', 'bg-success', 'bg-warning', 'bg-info',
+  'bg-chart-1', 'bg-chart-2', 'bg-chart-3', 'bg-chart-4',
 ];
 
 export default function Avatar({ name, src, size = 'md' }: AvatarProps) {
@@ -28,7 +28,7 @@ export default function Avatar({ name, src, size = 'md' }: AvatarProps) {
   return (
     <div
       className={`${sizes[size]} ${colors[colorIndex]} rounded-full flex items-center
-                  justify-center text-white font-semibold shrink-0`}
+                  justify-center text-primary-foreground font-semibold shrink-0`}
       title={name}
     >
       {initials}

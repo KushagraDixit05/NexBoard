@@ -20,13 +20,13 @@ export default function AddMemberDialog({ projectId, onSuccess, onCancel }: AddM
     setError('');
     setLoading(true);
     try {
-      // Find user by email first
-      const { data: users } = await api.get(`/users?search=${encodeURIComponent(email)}&limit=1`);
-      const user = (users.users ?? users)[0];
-      if (!user) {
+      // Find user by email using new search endpoint
+      const { data: users } = await api.get(`/users/search?email=${encodeURIComponent(email)}`);
+      if (!users || users.length === 0) {
         setError('No user found with that email.');
         return;
       }
+      const user = users[0];
       await api.post(`/projects/${projectId}/members`, { userId: user._id, role });
       onSuccess();
     } catch (err: unknown) {
@@ -39,15 +39,15 @@ export default function AddMemberDialog({ projectId, onSuccess, onCancel }: AddM
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       {error && (
-        <div className="p-3 bg-danger-50 text-danger-600 text-sm rounded-lg border border-danger-200">{error}</div>
+        <div className="p-3 bg-destructive/10 text-destructive text-sm rounded-md border border-destructive/30">{error}</div>
       )}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">User Email</label>
+        <label className="block text-sm font-medium text-foreground mb-1">User Email</label>
         <input type="email" className="input-field" value={email}
                onChange={e => setEmail(e.target.value)} required placeholder="user@example.com" />
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Role</label>
+        <label className="block text-sm font-medium text-foreground mb-1">Role</label>
         <select className="input-field" value={role}
                 onChange={e => setRole(e.target.value as 'member' | 'manager')}>
           <option value="member">Member</option>

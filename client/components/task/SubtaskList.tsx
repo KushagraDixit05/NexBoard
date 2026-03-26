@@ -39,31 +39,31 @@ export default function SubtaskList({ taskId, subtasks, onChange }: SubtaskListP
   return (
     <div>
       <div className="flex items-center justify-between mb-2">
-        <label className="text-sm font-medium text-gray-700">
-          Subtasks {subtasks.length > 0 && <span className="text-gray-400">({completed}/{subtasks.length})</span>}
+        <label className="text-sm font-medium text-foreground">
+          Subtasks {subtasks.length > 0 && <span className="text-muted-foreground">({completed}/{subtasks.length})</span>}
         </label>
       </div>
 
       {subtasks.length > 0 && (
-        <div className="h-1.5 bg-gray-100 rounded-full mb-3 overflow-hidden">
-          <div className="h-full bg-success-500 rounded-full transition-all duration-300"
+        <div className="h-1.5 bg-muted rounded-full mb-3 overflow-hidden">
+          <div className="h-full bg-success rounded-full transition-all duration-300"
                style={{ width: `${progress}%` }} />
         </div>
       )}
 
       <div className="space-y-0.5 mb-2">
         {subtasks.map(subtask => (
-          <div key={subtask._id} className="flex items-center gap-2 group py-1.5 px-1 rounded-lg hover:bg-gray-50">
-            <button onClick={() => toggle(subtask)} className="shrink-0 text-gray-400 hover:text-success-500">
+          <div key={subtask._id} className="flex items-center gap-2 group py-1.5 px-1 rounded-md hover:bg-muted">
+            <button onClick={() => toggle(subtask)} className="shrink-0 text-muted-foreground hover:text-success">
               {subtask.status === 'done'
-                ? <Check className="w-4 h-4 text-success-500" />
+                ? <Check className="w-4 h-4 text-success" />
                 : <Circle className="w-4 h-4" />}
             </button>
-            <span className={`flex-1 text-sm ${subtask.status === 'done' ? 'line-through text-gray-400' : 'text-gray-700'}`}>
+            <span className={`flex-1 text-sm ${subtask.status === 'done' ? 'line-through text-muted-foreground' : 'text-foreground'}`}>
               {subtask.title}
             </span>
             <button onClick={() => remove(subtask._id)}
-                    className="opacity-0 group-hover:opacity-100 p-1 text-gray-400 hover:text-danger-500 rounded">
+                    className="opacity-0 group-hover:opacity-100 p-1 text-muted-foreground hover:text-destructive rounded">
               <Trash2 className="w-3.5 h-3.5" />
             </button>
           </div>
@@ -81,7 +81,7 @@ export default function SubtaskList({ taskId, subtasks, onChange }: SubtaskListP
         </div>
       ) : (
         <button onClick={() => setAdding(true)}
-                className="flex items-center gap-1.5 text-sm text-gray-400 hover:text-gray-600 px-1">
+                className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground px-1">
           <Plus className="w-4 h-4" /> Add subtask
         </button>
       )}

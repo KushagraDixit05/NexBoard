@@ -112,4 +112,25 @@ const deleteUser = async (req, res, next) => {
   }
 };
 
-module.exports = { getAllUsers, getUserById, updateProfile, updatePreferences, changeRole, deactivateUser, deleteUser };
+// GET /api/users/search — Search users by email (authenticated users)
+const searchUsers = async (req, res, next) => {
+  try {
+    const { email } = req.query;
+    if (!email) {
+      return res.status(400).json({ error: 'Email query parameter is required.' });
+    }
+
+    const users = await User.find({
+      email: { $regex: email, $options: 'i' },
+      isActive: true
+    })
+      .select('_id username email displayName avatar')
+      .limit(10);
+
+    res.json(users);
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { getAllUsers, getUserById, updateProfile, updatePreferences, changeRole, deactivateUser, deleteUser, searchUsers };

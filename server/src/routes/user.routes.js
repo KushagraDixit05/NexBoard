@@ -3,7 +3,7 @@ const { authenticate } = require('../middleware/auth.middleware');
 const { authorize } = require('../middleware/role.middleware');
 const {
   getAllUsers, getUserById, updateProfile, updatePreferences,
-  changeRole, deactivateUser, deleteUser,
+  changeRole, deactivateUser, deleteUser, searchUsers,
 } = require('../controllers/user.controller');
 
 router.use(authenticate);
@@ -11,6 +11,7 @@ router.use(authenticate);
 // Self-service (any authenticated user)
 router.put('/profile',     updateProfile);
 router.put('/preferences', updatePreferences);
+router.get('/search',      searchUsers);
 
 // Admin-only
 router.get('/',                 authorize('admin'), getAllUsers);

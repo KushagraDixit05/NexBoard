@@ -59,27 +59,27 @@ export default function CommentSection({ taskId, comments, onChange }: CommentSe
             <Avatar name={comment.user?.displayName || comment.user?.username || '?'} size="sm" />
             <div className="flex-1 min-w-0">
               <div className="flex items-baseline gap-2 mb-1">
-                <span className="text-sm font-medium text-gray-900">
+                <span className="text-sm font-medium text-foreground">
                   {comment.user?.displayName || comment.user?.username}
                 </span>
-                <span className="text-xs text-gray-400">
+                <span className="text-xs text-muted-foreground">
                   {format(new Date(comment.createdAt), 'MMM d, h:mm a')}
                 </span>
               </div>
-              <div className="bg-gray-50 rounded-lg px-3 py-2 text-sm text-gray-700 whitespace-pre-wrap">
+              <div className="bg-muted rounded-md px-3 py-2 text-sm text-foreground whitespace-pre-wrap">
                 {comment.content}
               </div>
             </div>
             {comment.user?._id === user?._id && (
               <button onClick={() => handleDelete(comment._id)}
-                      className="opacity-0 group-hover:opacity-100 p-1 text-gray-400 hover:text-danger-500 self-start rounded">
+                      className="opacity-0 group-hover:opacity-100 p-1 text-muted-foreground hover:text-destructive self-start rounded">
                 <Trash2 className="w-3.5 h-3.5" />
               </button>
             )}
           </div>
         ))}
         {comments.length === 0 && (
-          <p className="text-sm text-gray-400 text-center py-4">No comments yet. Be the first!</p>
+          <p className="text-sm text-muted-foreground text-center py-4">No comments yet. Be the first!</p>
         )}
       </div>
     </div>

@@ -44,16 +44,16 @@ export default function AttachmentList({ taskId, attachments, onChange }: Attach
 
       <div className="space-y-1.5 mb-2">
         {attachments.map(att => (
-          <div key={att._id} className="flex items-center gap-2 group p-2 bg-gray-50 rounded-lg">
-            <Paperclip className="w-4 h-4 text-gray-400 shrink-0" />
-            <span className="flex-1 text-xs text-gray-700 truncate">{att.originalName}</span>
-            <span className="text-xs text-gray-400 shrink-0">{formatSize(att.size)}</span>
+          <div key={att._id} className="flex items-center gap-2 group p-2 bg-muted rounded-md">
+            <Paperclip className="w-4 h-4 text-muted-foreground shrink-0" />
+            <span className="flex-1 text-xs text-foreground truncate">{att.originalName}</span>
+            <span className="text-xs text-muted-foreground shrink-0">{formatSize(att.size)}</span>
             <a href={`/api/attachments/${att.filename}`} download={att.originalName}
-               className="opacity-0 group-hover:opacity-100 p-1 text-gray-400 hover:text-primary-600 rounded">
+               className="opacity-0 group-hover:opacity-100 p-1 text-muted-foreground hover:text-primary rounded">
               <Download className="w-3.5 h-3.5" />
             </a>
             <button onClick={() => handleDelete(att._id)}
-                    className="opacity-0 group-hover:opacity-100 p-1 text-gray-400 hover:text-danger-500 rounded">
+                    className="opacity-0 group-hover:opacity-100 p-1 text-muted-foreground hover:text-destructive rounded">
               <Trash2 className="w-3.5 h-3.5" />
             </button>
           </div>
@@ -62,7 +62,7 @@ export default function AttachmentList({ taskId, attachments, onChange }: Attach
 
       <input ref={inputRef} type="file" onChange={handleUpload} className="hidden" />
       <button onClick={() => inputRef.current?.click()}
-              className="flex items-center gap-1.5 text-sm text-gray-400 hover:text-gray-600">
+              className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
         <Upload className="w-4 h-4" /> Upload file
       </button>
     </div>

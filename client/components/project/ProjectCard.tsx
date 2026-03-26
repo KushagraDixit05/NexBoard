@@ -11,23 +11,23 @@ export default function ProjectCard({ project }: ProjectCardProps) {
   return (
     <Link
       href={`/dashboard/projects/${project._id}`}
-      className="card p-5 flex flex-col gap-3 hover:shadow-card-hover transition-shadow group"
+      className="card p-5 flex flex-col gap-3 hover:shadow-md transition-shadow group"
     >
       <div className="flex items-center gap-3">
-        <div className="w-9 h-9 rounded-lg shrink-0 flex items-center justify-center"
+        <div className="w-9 h-9 rounded-md shrink-0 flex items-center justify-center"
              style={{ background: project.color + '20' }}>
           <div className="w-4 h-4 rounded-full" style={{ background: project.color }} />
         </div>
-        <h3 className="font-semibold text-gray-900 truncate group-hover:text-primary-600 transition-colors">
+        <h3 className="font-semibold text-foreground truncate group-hover:text-primary transition-colors">
           {project.name}
         </h3>
       </div>
 
       {project.description && (
-        <p className="text-sm text-gray-500 line-clamp-2">{project.description}</p>
+        <p className="text-sm text-muted-foreground line-clamp-2">{project.description}</p>
       )}
 
-      <div className="flex items-center gap-4 mt-auto text-xs text-gray-400 pt-2 border-t border-gray-50">
+      <div className="flex items-center gap-4 mt-auto text-xs text-muted-foreground pt-2 border-t border-border">
         <span className="flex items-center gap-1">
           <Users className="w-3 h-3" /> {project.members.length}
         </span>

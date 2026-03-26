@@ -24,13 +24,32 @@ const createProject = async (req, res, next) => {
 // GET /api/projects
 const getProjects = async (req, res, next) => {
   try {
-    const { archived } = req.query;
+    const { archived, search, q } = req.query;
     const filter = req.user.role === 'admin'
       ? {}
       : { $or: [{ owner: req.user._id }, { 'members.user': req.user._id }] };
 
     if (archived === 'true')  filter.isArchived = true;
     else if (archived !== 'all') filter.isArchived = false; // default: active only
+
+    // Add text search if query provided
+    const searchQuery = search || q;
+    if (searchQuery) {
+      const searchFilter = {
+        $or: [
+          { name: { $regex: searchQuery, $options: 'i' } },
+          { description: { $regex: searchQuery, $options: 'i' } }
+        ]
+      };
+      
+      // Combine with existing filters using $and
+      if (filter.$or) {
+        filter.$and = [{ $or: filter.$or }, searchFilter];
+        delete filter.$or;
+      } else {
+        Object.assign(filter, searchFilter);
+      }
+    }
 
     const projects = await Project.find(filter)
       .populate('owner', 'username displayName avatar')

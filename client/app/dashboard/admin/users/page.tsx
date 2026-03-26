@@ -36,26 +36,26 @@ export default function AdminUsersPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">User Management</h1>
-          <p className="text-sm text-gray-500">{users.length} users</p>
+          <h1 className="text-2xl font-bold text-foreground">User Management</h1>
+          <p className="text-sm text-muted-foreground">{users.length} users</p>
         </div>
       </div>
 
       <div className="card overflow-hidden">
-        <div className="p-4 border-b border-gray-100">
+        <div className="p-4 border-b border-border">
           <input className="input-field max-w-sm" placeholder="Search users..."
                  value={search} onChange={e => setSearch(e.target.value)}
                  onKeyDown={e => e.key === 'Enter' && fetchUsers()} />
         </div>
-        <div className="divide-y divide-gray-100">
+        <div className="divide-y divide-border">
           {loading ? (
-            [1,2,3].map(i => <div key={i} className="p-4 animate-pulse flex gap-4"><div className="w-10 h-10 bg-gray-100 rounded-full" /><div className="flex-1 space-y-2"><div className="h-4 bg-gray-100 rounded w-48" /><div className="h-3 bg-gray-100 rounded w-32" /></div></div>)
+            [1,2,3].map(i => <div key={i} className="p-4 animate-pulse flex gap-4"><div className="w-10 h-10 bg-muted rounded-full" /><div className="flex-1 space-y-2"><div className="h-4 bg-muted rounded w-48" /><div className="h-3 bg-muted rounded w-32" /></div></div>)
           ) : users.map(user => (
             <div key={user._id} className="flex items-center gap-4 p-4">
               <Avatar name={user.displayName || user.username} size="md" src={user.avatar} />
               <div className="flex-1 min-w-0">
-                <p className="font-medium text-gray-900">{user.displayName || user.username}</p>
-                <p className="text-sm text-gray-500">{user.email}</p>
+                <p className="font-medium text-foreground">{user.displayName || user.username}</p>
+                <p className="text-sm text-muted-foreground">{user.email}</p>
               </div>
               <Badge variant={user.isActive ? 'success' : 'danger'}>
                 {user.isActive ? 'Active' : 'Inactive'}
@@ -63,7 +63,7 @@ export default function AdminUsersPage() {
               <select
                 value={user.role}
                 onChange={e => handleRoleChange(user._id, e.target.value)}
-                className="text-sm border border-gray-200 rounded-lg px-2 py-1 focus:ring-2 focus:ring-primary-500 focus:outline-none"
+                className="text-sm border border-input rounded-md px-2 py-1 focus:ring-2 focus:ring-ring focus:outline-none bg-background"
               >
                 <option value="user">User</option>
                 <option value="manager">Manager</option>
@@ -71,7 +71,7 @@ export default function AdminUsersPage() {
               </select>
               <button
                 onClick={() => setDeactivating(user._id)}
-                className="p-2 text-gray-400 hover:text-danger-500 rounded-lg transition-colors"
+                className="p-2 text-muted-foreground hover:text-destructive rounded-md transition-colors"
                 title="Deactivate"
               >
                 <UserX className="w-4 h-4" />

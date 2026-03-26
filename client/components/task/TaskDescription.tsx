@@ -21,7 +21,7 @@ export default function TaskDescription({ content, onSave }: TaskDescriptionProp
   if (isEditing) {
     return (
       <div className="space-y-2">
-        <label className="text-sm font-medium text-gray-700">Description</label>
+        <label className="text-sm font-medium text-foreground">Description</label>
         <textarea
           autoFocus value={draft}
           onChange={e => setDraft(e.target.value)}
@@ -41,19 +41,19 @@ export default function TaskDescription({ content, onSave }: TaskDescriptionProp
   return (
     <div>
       <div className="flex items-center justify-between mb-2">
-        <label className="text-sm font-medium text-gray-700">Description</label>
+        <label className="text-sm font-medium text-foreground">Description</label>
         <button onClick={() => setIsEditing(true)}
-                className="text-xs text-primary-600 hover:underline">
+                className="text-xs text-primary hover:underline">
           Edit
         </button>
       </div>
       {content ? (
-        <div className="prose prose-sm max-w-none text-gray-700 cursor-pointer"
+        <div className="prose prose-sm max-w-none text-foreground cursor-pointer"
              onClick={() => setIsEditing(true)}>
           <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
         </div>
       ) : (
-        <p className="text-sm text-gray-400 cursor-pointer hover:text-gray-600 italic"
+        <p className="text-sm text-muted-foreground cursor-pointer hover:text-foreground italic"
            onClick={() => setIsEditing(true)}>
           Click to add a description (Markdown supported)...
         </p>

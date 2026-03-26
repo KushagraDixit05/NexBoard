@@ -48,15 +48,15 @@ export default function NotificationsPage() {
   const getNotificationColor = (type: AppNotification['type']) => {
     switch (type) {
       case 'task_assigned':
-        return 'bg-blue-100 text-blue-600';
+        return 'bg-info/10 text-info';
       case 'task_completed':
-        return 'bg-green-100 text-green-600';
+        return 'bg-success/10 text-success';
       case 'comment_added':
-        return 'bg-purple-100 text-purple-600';
+        return 'bg-chart-4/10 text-chart-4';
       case 'due_date_reminder':
-        return 'bg-orange-100 text-orange-600';
+        return 'bg-warning/10 text-warning';
       default:
-        return 'bg-gray-100 text-gray-600';
+        return 'bg-muted text-muted-foreground';
     }
   };
 
@@ -65,8 +65,8 @@ export default function NotificationsPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Notifications</h1>
-          <p className="text-sm text-gray-500 mt-1">
+          <h1 className="text-2xl font-bold text-foreground">Notifications</h1>
+          <p className="text-sm text-muted-foreground mt-1">
             {unreadCount > 0 ? `${unreadCount} unread notification${unreadCount !== 1 ? 's' : ''}` : 'All caught up!'}
           </p>
         </div>
@@ -82,13 +82,13 @@ export default function NotificationsPage() {
       </div>
 
       {/* Filters */}
-      <div className="flex gap-2 border-b border-gray-200">
+      <div className="flex gap-2 border-b border-border">
         <button
           onClick={() => setFilter('all')}
           className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
             filter === 'all'
-              ? 'border-primary-600 text-primary-600'
-              : 'border-transparent text-gray-500 hover:text-gray-700'
+              ? 'border-primary text-primary'
+              : 'border-transparent text-muted-foreground hover:text-foreground'
           }`}
         >
           All ({notifications.length})
@@ -97,8 +97,8 @@ export default function NotificationsPage() {
           onClick={() => setFilter('unread')}
           className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
             filter === 'unread'
-              ? 'border-primary-600 text-primary-600'
-              : 'border-transparent text-gray-500 hover:text-gray-700'
+              ? 'border-primary text-primary'
+              : 'border-transparent text-muted-foreground hover:text-foreground'
           }`}
         >
           Unread ({unreadCount})
@@ -111,10 +111,10 @@ export default function NotificationsPage() {
           {[1, 2, 3].map(i => (
             <div key={i} className="card p-4 animate-pulse">
               <div className="flex gap-3">
-                <div className="w-8 h-8 bg-gray-200 rounded-full shrink-0" />
+                <div className="w-8 h-8 bg-muted rounded-full shrink-0" />
                 <div className="flex-1 space-y-2">
-                  <div className="h-4 bg-gray-200 rounded w-3/4" />
-                  <div className="h-3 bg-gray-200 rounded w-1/2" />
+                  <div className="h-4 bg-muted rounded w-3/4" />
+                  <div className="h-3 bg-muted rounded w-1/2" />
                 </div>
               </div>
             </div>
@@ -122,11 +122,11 @@ export default function NotificationsPage() {
         </div>
       ) : filteredNotifications.length === 0 ? (
         <div className="card p-12 text-center">
-          <Bell className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-          <h3 className="text-gray-900 font-semibold mb-1">
+          <Bell className="w-12 h-12 text-muted-foreground/50 mx-auto mb-4" />
+          <h3 className="text-foreground font-semibold mb-1">
             {filter === 'unread' ? 'No unread notifications' : 'No notifications yet'}
           </h3>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-muted-foreground">
             {filter === 'unread' 
               ? 'You\'re all caught up!' 
               : 'Notifications will appear here when you get activity on your projects'}
@@ -138,7 +138,7 @@ export default function NotificationsPage() {
             <div
               key={notification._id}
               className={`card p-4 transition-colors ${
-                notification.isRead ? 'bg-white' : 'bg-blue-50 border-blue-100'
+                notification.isRead ? 'bg-card' : 'bg-accent/50 border-accent'
               }`}
             >
               <div className="flex gap-3">
@@ -149,10 +149,10 @@ export default function NotificationsPage() {
 
                 {/* Content */}
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm text-gray-900 mb-1">
+                  <p className="text-sm text-foreground mb-1">
                     {notification.message}
                   </p>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-muted-foreground">
                     {formatDistanceToNow(new Date(notification.createdAt), { addSuffix: true })}
                   </p>
                 </div>
@@ -162,7 +162,7 @@ export default function NotificationsPage() {
                   {!notification.isRead && (
                     <button
                       onClick={() => handleMarkAsRead(notification._id)}
-                      className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-500 hover:text-gray-700 transition-colors"
+                      className="p-1.5 rounded-md hover:bg-accent text-muted-foreground hover:text-accent-foreground transition-colors"
                       title="Mark as read"
                     >
                       <Check className="w-4 h-4" />

@@ -3,14 +3,20 @@ const path = require('path');
 const fs = require('fs');
 const { UPLOAD_DIR, MAX_FILE_SIZE } = require('../config/env');
 
+// Resolve absolute path for uploads directory
+// Use path from env, but ensure it's absolute relative to project root
+const ABSOLUTE_UPLOAD_DIR = path.isAbsolute(UPLOAD_DIR)
+  ? UPLOAD_DIR
+  : path.join(__dirname, '../../', UPLOAD_DIR);
+
 // Ensure upload directory exists
-if (!fs.existsSync(UPLOAD_DIR)) {
-  fs.mkdirSync(UPLOAD_DIR, { recursive: true });
+if (!fs.existsSync(ABSOLUTE_UPLOAD_DIR)) {
+  fs.mkdirSync(ABSOLUTE_UPLOAD_DIR, { recursive: true });
 }
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, UPLOAD_DIR);
+    cb(null, ABSOLUTE_UPLOAD_DIR);
   },
   filename: (req, file, cb) => {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);

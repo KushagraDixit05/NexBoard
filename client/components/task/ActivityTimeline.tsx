@@ -21,23 +21,23 @@ export default function ActivityTimeline({ taskId, projectId }: ActivityTimeline
        .finally(() => setLoading(false));
   }, [taskId, projectId]);
 
-  if (loading) return <div className="animate-pulse space-y-3">{[1,2,3].map(i => <div key={i} className="h-10 bg-gray-100 rounded" />)}</div>;
-  if (activities.length === 0) return <p className="text-sm text-gray-400 py-4 text-center">No activity recorded yet.</p>;
+  if (loading) return <div className="animate-pulse space-y-3">{[1,2,3].map(i => <div key={i} className="h-10 bg-muted rounded" />)}</div>;
+  if (activities.length === 0) return <p className="text-sm text-muted-foreground py-4 text-center">No activity recorded yet.</p>;
 
   return (
     <div className="relative space-y-4">
-      <div className="absolute left-3.5 top-0 bottom-0 w-px bg-gray-100" />
+      <div className="absolute left-3.5 top-0 bottom-0 w-px bg-border" />
       {activities.map(log => (
         <div key={log._id} className="flex gap-3 relative">
           <div className="shrink-0 z-10">
             <Avatar name={log.user?.displayName || log.user?.username || '?'} size="xs" />
           </div>
           <div className="flex-1 min-w-0 pb-1">
-            <p className="text-sm text-gray-700">
+            <p className="text-sm text-foreground">
               <span className="font-medium">{log.user?.displayName || log.user?.username}</span>
-              {' '}<span className="text-gray-500">{log.action.replace(/\./g,' ')}</span>
+              {' '}<span className="text-muted-foreground">{log.action.replace(/\./g,' ')}</span>
             </p>
-            <p className="text-xs text-gray-400">{format(new Date(log.createdAt), 'MMM d, h:mm a')}</p>
+            <p className="text-xs text-muted-foreground">{format(new Date(log.createdAt), 'MMM d, h:mm a')}</p>
           </div>
         </div>
       ))}

@@ -35,16 +35,16 @@ export default function Sidebar() {
     href === '/dashboard' ? pathname === '/dashboard' : pathname.startsWith(href);
 
   return (
-    <aside className={`${collapsed ? 'w-16' : 'w-64'} bg-white border-r border-gray-200
+    <aside className={`${collapsed ? 'w-16' : 'w-64'} bg-card border-r border-border
                        flex flex-col transition-all duration-200 shrink-0`}>
       {/* Logo + Collapse */}
-      <div className="h-16 flex items-center px-4 border-b border-gray-100 gap-3">
+      <div className="h-16 flex items-center px-4 border-b border-border gap-3">
         {!collapsed && (
-          <span className="text-xl font-bold text-primary-600 truncate">NexBoard</span>
+          <span className="text-xl font-bold text-foreground truncate">NexBoard</span>
         )}
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="ml-auto p-1.5 rounded-lg hover:bg-gray-100 text-gray-500 shrink-0"
+          className="ml-auto p-1.5 rounded-md hover:bg-accent text-muted-foreground shrink-0"
         >
           {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
         </button>
@@ -54,10 +54,10 @@ export default function Sidebar() {
       <nav className="flex-1 py-4 space-y-0.5 px-2 overflow-y-auto">
         {navigation.map((item) => (
           <Link key={item.name} href={item.href}
-                className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium
+                className={`flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium
                   transition-colors ${isActive(item.href)
-                    ? 'bg-primary-50 text-primary-700'
-                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                    ? 'bg-accent text-accent-foreground'
+                    : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
                   }`}
                 title={collapsed ? item.name : undefined}>
             <item.icon className="w-5 h-5 flex-shrink-0" />
@@ -69,16 +69,16 @@ export default function Sidebar() {
           <>
             {!collapsed && (
               <div className="pt-4 pb-1 px-3">
-                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Admin</p>
+                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Admin</p>
               </div>
             )}
-            {collapsed && <div className="my-2 border-t border-gray-100" />}
+            {collapsed && <div className="my-2 border-t border-border" />}
             {adminNav.map((item) => (
               <Link key={item.name} href={item.href}
-                    className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium
+                    className={`flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium
                       transition-colors ${isActive(item.href)
-                        ? 'bg-primary-50 text-primary-700'
-                        : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                        ? 'bg-accent text-accent-foreground'
+                        : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
                       }`}
                     title={collapsed ? item.name : undefined}>
                 <item.icon className="w-5 h-5 flex-shrink-0" />
@@ -90,16 +90,16 @@ export default function Sidebar() {
       </nav>
 
       {/* User + Logout */}
-      <div className="border-t border-gray-100 p-3">
+      <div className="border-t border-border p-3">
         {!collapsed && user && (
           <div className="px-2 py-1 mb-1">
-            <p className="text-sm font-medium text-gray-900 truncate">{user.displayName || user.username}</p>
-            <p className="text-xs text-gray-500 capitalize">{user.role}</p>
+            <p className="text-sm font-medium text-foreground truncate">{user.displayName || user.username}</p>
+            <p className="text-xs text-muted-foreground capitalize">{user.role}</p>
           </div>
         )}
         <button onClick={handleLogout}
-                className="flex items-center gap-3 px-3 py-2 w-full rounded-lg text-sm
-                           text-gray-600 hover:bg-gray-50 transition-colors"
+                className="flex items-center gap-3 px-3 py-2 w-full rounded-md text-sm
+                           text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
                 title={collapsed ? 'Logout' : undefined}>
           <LogOut className="w-5 h-5 flex-shrink-0" />
           {!collapsed && <span>Logout</span>}

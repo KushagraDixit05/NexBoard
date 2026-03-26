@@ -35,15 +35,15 @@ export default function TimeTracker({ estimated, spent, onLogTime }: TimeTracker
       </label>
 
       <div className="space-y-2">
-        <div className="flex justify-between text-xs text-gray-500">
-          <span>Spent: <strong className="text-gray-800">{formatTime(spent)}</strong></span>
-          <span>Est: <strong className="text-gray-800">{formatTime(estimated)}</strong></span>
+        <div className="flex justify-between text-xs text-muted-foreground">
+          <span>Spent: <strong className="text-foreground">{formatTime(spent)}</strong></span>
+          <span>Est: <strong className="text-foreground">{formatTime(estimated)}</strong></span>
         </div>
 
         {estimated > 0 && (
-          <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+          <div className="h-1.5 bg-muted rounded-full overflow-hidden">
             <div
-              className={`h-full rounded-full transition-all ${progress >= 100 ? 'bg-danger-500' : 'bg-primary-500'}`}
+              className={`h-full rounded-full transition-all ${progress >= 100 ? 'bg-destructive' : 'bg-primary'}`}
               style={{ width: `${progress}%` }}
             />
           </div>

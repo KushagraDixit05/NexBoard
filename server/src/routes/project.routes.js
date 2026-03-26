@@ -16,6 +16,7 @@ router.get('/:projectId', projectMember, getProject);
 router.put('/:projectId', projectMember, validate(projectValidator.updateSchema), updateProject);
 router.delete('/:projectId', projectMember, projectOwner, deleteProject);
 router.patch('/:projectId/archive', projectMember, projectOwner, archiveProject);
+router.patch('/:projectId/unarchive', projectMember, projectOwner, archiveProject); // Same handler - toggles status
 router.get('/:projectId/activity', projectMember, getActivity);
 
 // Member management (manager or owner only)

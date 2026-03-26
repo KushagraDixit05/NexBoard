@@ -36,37 +36,42 @@ export default function ProjectSettingsPage() {
     router.push('/dashboard/projects');
   };
 
+  const handleUnarchive = async () => {
+    await api.patch(`/projects/${projectId}/unarchive`);
+    router.push('/dashboard/projects');
+  };
+
   const handleDelete = async () => {
     await api.delete(`/projects/${projectId}`);
     router.push('/dashboard/projects');
   };
 
-  if (!project) return <div className="animate-pulse h-96 bg-gray-100 rounded-xl" />;
+  if (!project) return <div className="animate-pulse h-96 bg-muted rounded-lg" />;
 
   return (
     <div className="max-w-lg space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900">Project Settings</h1>
+      <h1 className="text-2xl font-bold text-foreground">Project Settings</h1>
 
       <div className="card p-6">
         <form onSubmit={handleSave} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Project Name</label>
+            <label className="block text-sm font-medium text-foreground mb-1">Project Name</label>
             <input className="input-field" value={form.name}
                    onChange={e => setForm(f => ({ ...f, name: e.target.value }))} required />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+            <label className="block text-sm font-medium text-foreground mb-1">Description</label>
             <textarea className="input-field min-h-[80px]" value={form.description}
                       onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
                       placeholder="Optional project description" />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Color</label>
+            <label className="block text-sm font-medium text-foreground mb-2">Color</label>
             <div className="flex gap-2 flex-wrap">
               {COLORS.map(c => (
                 <button key={c} type="button"
                         onClick={() => setForm(f => ({ ...f, color: c }))}
-                        className={`w-7 h-7 rounded-full border-2 transition-all ${form.color === c ? 'border-gray-800 scale-110' : 'border-transparent'}`}
+                        className={`w-7 h-7 rounded-full border-2 transition-all ${form.color === c ? 'border-foreground scale-110' : 'border-transparent'}`}
                         style={{ background: c }} />
               ))}
             </div>
@@ -77,22 +82,32 @@ export default function ProjectSettingsPage() {
         </form>
       </div>
 
-      <div className="card p-6 border-danger-200">
-        <h2 className="font-semibold text-gray-900 mb-4">Danger Zone</h2>
+      <div className="card p-6 border-destructive/50">
+        <h2 className="font-semibold text-foreground mb-4">Danger Zone</h2>
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium">Archive Project</p>
-              <p className="text-xs text-gray-500">Hide from dashboard but keep data</p>
+              <p className="text-sm font-medium text-foreground">
+                {project.isArchived ? 'Unarchive Project' : 'Archive Project'}
+              </p>
+              <p className="text-xs text-muted-foreground">
+                {project.isArchived 
+                  ? 'Restore project to active dashboard' 
+                  : 'Hide from dashboard but keep data'}
+              </p>
             </div>
-            <button onClick={handleArchive} className="btn-secondary text-sm">
-              <Archive className="w-4 h-4" /> Archive
+            <button 
+              onClick={project.isArchived ? handleUnarchive : handleArchive} 
+              className="btn-secondary text-sm"
+            >
+              <Archive className="w-4 h-4" /> 
+              {project.isArchived ? 'Unarchive' : 'Archive'}
             </button>
           </div>
-          <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+          <div className="flex items-center justify-between pt-3 border-t border-border">
             <div>
-              <p className="text-sm font-medium text-danger-600">Delete Project</p>
-              <p className="text-xs text-gray-500">Permanently delete all data</p>
+              <p className="text-sm font-medium text-destructive">Delete Project</p>
+              <p className="text-xs text-muted-foreground">Permanently delete all data</p>
             </div>
             <button onClick={() => setShowDelete(true)} className="btn-danger text-sm">
               <Trash2 className="w-4 h-4" /> Delete

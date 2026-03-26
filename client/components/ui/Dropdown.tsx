@@ -26,7 +26,7 @@ export default function Dropdown({ trigger, items, align = 'end', className = ''
         <DropdownMenuPrimitive.Content
           align={align}
           sideOffset={8}
-          className={`min-w-[160px] bg-white rounded-lg shadow-card-hover border border-gray-100 p-1 z-50 animate-in fade-in zoom-in-95 ${className}`}
+          className={`min-w-[160px] bg-popover rounded-md shadow-card-hover border border-border p-1 z-50 animate-in fade-in zoom-in-95 ${className}`}
         >
           {items.map((item, index) => (
             <DropdownMenuPrimitive.Item
@@ -34,8 +34,8 @@ export default function Dropdown({ trigger, items, align = 'end', className = ''
               onClick={item.onClick}
               className={`flex items-center gap-2 px-3 py-2 text-sm rounded-md cursor-pointer outline-none transition-colors
                 ${item.danger 
-                  ? 'text-danger-600 hover:bg-danger-50 focus:bg-danger-50' 
-                  : 'text-gray-700 hover:bg-gray-100 focus:bg-gray-100'
+                  ? 'text-destructive hover:bg-destructive/10 focus:bg-destructive/10' 
+                  : 'text-foreground hover:bg-muted focus:bg-muted'
                 }`}
             >
               {item.icon && <span className="flex-shrink-0 w-4 h-4 flex items-center justify-center">{item.icon}</span>}

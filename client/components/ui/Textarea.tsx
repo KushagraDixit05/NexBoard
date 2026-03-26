@@ -10,16 +10,16 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
     return (
       <div className="w-full">
         {label && (
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-foreground mb-1">
             {label}
           </label>
         )}
         <textarea
           ref={ref}
-          className={`input-field min-h-[80px] resize-y ${error ? 'border-danger-500 focus:ring-danger-500' : ''} ${className}`}
+          className={`input-field min-h-[80px] resize-y ${error ? 'border-destructive focus:ring-destructive' : ''} ${className}`}
           {...props}
         />
-        {error && <p className="mt-1 text-sm text-danger-500">{error}</p>}
+        {error && <p className="mt-1 text-sm text-destructive">{error}</p>}
       </div>
     );
   }

@@ -49,6 +49,7 @@ app.use('/api/automation',    require('./routes/automation.routes'));
 app.use('/api/analytics',     require('./routes/analytics.routes'));
 app.use('/api/notifications', require('./routes/notification.routes'));
 app.use('/api/webhooks',      require('./routes/webhook.routes'));
+app.use('/api/dashboard',     require('./routes/dashboard.routes'));
 
 // --- Static file serving for uploads ---
 app.use('/uploads', express.static(path.resolve('./uploads')));

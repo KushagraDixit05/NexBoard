@@ -40,31 +40,31 @@ export default function ProjectForm({ initialData, onSuccess, onCancel }: Projec
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       {error && (
-        <div className="p-3 bg-danger-50 border border-danger-200 text-danger-600 text-sm rounded-lg">{error}</div>
+        <div className="p-3 bg-destructive/10 border border-destructive/50 text-destructive text-sm rounded-md">{error}</div>
       )}
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Project Name *</label>
+        <label className="block text-sm font-medium text-foreground mb-1">Project Name *</label>
         <input className="input-field" required value={form.name}
                onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
                placeholder="My Awesome Project" />
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+        <label className="block text-sm font-medium text-foreground mb-1">Description</label>
         <textarea className="input-field min-h-[80px]" value={form.description}
                   onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
                   placeholder="What is this project about?" />
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">Color</label>
+        <label className="block text-sm font-medium text-foreground mb-2">Color</label>
         <div className="flex gap-2 flex-wrap">
           {COLORS.map(c => (
             <button key={c} type="button"
                     onClick={() => setForm(f => ({ ...f, color: c }))}
                     className={`w-7 h-7 rounded-full border-2 transition-all
-                      ${form.color === c ? 'border-gray-800 scale-110' : 'border-transparent hover:scale-105'}`}
+                      ${form.color === c ? 'border-foreground scale-110' : 'border-transparent hover:scale-105'}`}
                     style={{ background: c }} />
           ))}
         </div>

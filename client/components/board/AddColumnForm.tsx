@@ -27,8 +27,8 @@ export default function AddColumnForm({ boardId }: AddColumnFormProps) {
     return (
       <button
         onClick={() => setIsAdding(true)}
-        className="flex-shrink-0 w-72 h-12 flex items-center gap-2 px-4 rounded-xl
-                   text-sm text-gray-500 hover:text-gray-700 hover:bg-gray-100 transition-colors"
+        className="flex-shrink-0 w-72 h-12 flex items-center gap-2 px-4 rounded-lg
+                   text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
       >
         <Plus className="w-4 h-4" /> Add column
       </button>
@@ -36,7 +36,7 @@ export default function AddColumnForm({ boardId }: AddColumnFormProps) {
   }
 
   return (
-    <div className="flex-shrink-0 w-72 bg-gray-100 rounded-xl p-3 space-y-2">
+    <div className="flex-shrink-0 w-72 bg-muted rounded-lg p-3 space-y-2">
       <input
         autoFocus
         value={title}
