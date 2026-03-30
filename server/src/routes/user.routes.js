@@ -4,6 +4,7 @@ const { authorize } = require('../middleware/role.middleware');
 const {
   getAllUsers, getUserById, updateProfile, updatePreferences,
   changeRole, deactivateUser, deleteUser, searchUsers,
+  getUserActivityHeatmap,
 } = require('../controllers/user.controller');
 
 router.use(authenticate);
@@ -12,6 +13,7 @@ router.use(authenticate);
 router.put('/profile',     updateProfile);
 router.put('/preferences', updatePreferences);
 router.get('/search',      searchUsers);
+router.get('/activity/heatmap', getUserActivityHeatmap);
 
 // Admin-only
 router.get('/',                 authorize('admin'), getAllUsers);

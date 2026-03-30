@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import api from '@/lib/api';
-import type { BoardData, Task, Column } from '@/types';
+import type { BoardData, Task, Column, Swimlane } from '@/types';
 
 interface BoardState {
   boardData: BoardData | null;
@@ -8,8 +8,8 @@ interface BoardState {
   error:     string | null;
 
   fetchBoard:       (boardId: string) => Promise<void>;
-  optimisticMoveTask: (taskId: string, srcColId: string, destColId: string, destIndex: number) => void;
-  moveTask:         (taskId: string, targetColumn: string, targetPosition: number) => Promise<void>;
+  optimisticMoveTask: (taskId: string, srcColId: string, destColId: string, destIndex: number, srcSwim?: string, destSwim?: string) => void;
+  moveTask:         (taskId: string, targetColumn: string, targetPosition: number, targetSwimlane?: string) => Promise<void>;
   addTask:          (data: Partial<Task>) => Promise<Task>;
   updateTask:       (taskId: string, updates: Partial<Task>) => Promise<void>;
   deleteTask:       (taskId: string) => Promise<void>;
@@ -17,6 +17,10 @@ interface BoardState {
   updateColumn:     (columnId: string, updates: Partial<Column>) => Promise<void>;
   deleteColumn:     (columnId: string) => Promise<void>;
   reorderColumns:   (columns: { id: string; position: number }[]) => Promise<void>;
+  addSwimlane:      (data: Partial<Swimlane>) => Promise<void>;
+  updateSwimlane:   (swimlaneId: string, updates: Partial<Swimlane>) => Promise<void>;
+  deleteSwimlane:   (swimlaneId: string) => Promise<void>;
+  reorderSwimlanes: (swimlanes: { id: string; position: number }[]) => Promise<void>;
 }
 
 export const useBoardStore = create<BoardState>((set, get) => ({
@@ -35,7 +39,7 @@ export const useBoardStore = create<BoardState>((set, get) => ({
     }
   },
 
-  optimisticMoveTask: (taskId, srcColId, destColId, destIndex) => {
+  optimisticMoveTask: (taskId, srcColId, destColId, destIndex, srcSwim, destSwim) => {
     const { boardData } = get();
     if (!boardData) return;
 
@@ -50,6 +54,9 @@ export const useBoardStore = create<BoardState>((set, get) => ({
 
     const destCol = newColumns.find(c => c._id === destColId)!;
     movedTask.column = destColId;
+    if (destSwim !== undefined) {
+      movedTask.swimlane = destSwim;
+    }
     destCol.tasks.splice(destIndex, 0, movedTask);
 
     srcCol.tasks.forEach((t, i)  => { t.position = i; });
@@ -58,9 +65,13 @@ export const useBoardStore = create<BoardState>((set, get) => ({
     set({ boardData: { ...boardData, columns: newColumns } });
   },
 
-  moveTask: async (taskId, targetColumn, targetPosition) => {
+  moveTask: async (taskId, targetColumn, targetPosition, targetSwimlane) => {
     try {
-      await api.patch(`/tasks/${taskId}/move`, { targetColumn, targetPosition });
+      const payload: any = { targetColumn, targetPosition };
+      if (targetSwimlane !== undefined) {
+        payload.targetSwimlane = targetSwimlane;
+      }
+      await api.patch(`/tasks/${taskId}/move`, payload);
     } catch {
       const { boardData } = get();
       if (boardData) get().fetchBoard(boardData.board._id as string);
@@ -106,6 +117,30 @@ export const useBoardStore = create<BoardState>((set, get) => ({
 
   reorderColumns: async (columns) => {
     await api.patch('/columns/reorder', { columns });
+    const { boardData } = get();
+    if (boardData) await get().fetchBoard(boardData.board._id as string);
+  },
+
+  addSwimlane: async (data) => {
+    await api.post('/swimlanes', data);
+    const { boardData } = get();
+    if (boardData) await get().fetchBoard(boardData.board._id as string);
+  },
+
+  updateSwimlane: async (swimlaneId, updates) => {
+    await api.put(`/swimlanes/${swimlaneId}`, updates);
+    const { boardData } = get();
+    if (boardData) await get().fetchBoard(boardData.board._id as string);
+  },
+
+  deleteSwimlane: async (swimlaneId) => {
+    await api.delete(`/swimlanes/${swimlaneId}`);
+    const { boardData } = get();
+    if (boardData) await get().fetchBoard(boardData.board._id as string);
+  },
+
+  reorderSwimlanes: async (swimlanes) => {
+    await api.patch('/swimlanes/reorder', { swimlanes });
     const { boardData } = get();
     if (boardData) await get().fetchBoard(boardData.board._id as string);
   },

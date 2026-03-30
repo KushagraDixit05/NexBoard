@@ -5,13 +5,14 @@ import { useBoardStore } from '@/store/boardStore';
 import { X } from 'lucide-react';
 
 interface TaskFormProps {
-  columnId:  string;
-  boardId:   string;
-  projectId: string;
-  onClose:   () => void;
+  columnId:   string;
+  boardId:    string;
+  projectId:  string;
+  swimlaneId?: string;
+  onClose:    () => void;
 }
 
-export default function TaskForm({ columnId, boardId, projectId, onClose }: TaskFormProps) {
+export default function TaskForm({ columnId, boardId, projectId, swimlaneId, onClose }: TaskFormProps) {
   const { addTask } = useBoardStore();
   const [title, setTitle]   = useState('');
   const [loading, setLoading] = useState(false);
@@ -20,7 +21,13 @@ export default function TaskForm({ columnId, boardId, projectId, onClose }: Task
     e.preventDefault();
     if (!title.trim()) return;
     setLoading(true);
-    await addTask({ title: title.trim(), column: columnId, board: boardId, project: projectId });
+    await addTask({ 
+      title: title.trim(), 
+      column: columnId, 
+      board: boardId, 
+      project: projectId,
+      ...(swimlaneId && { swimlane: swimlaneId })
+    });
     onClose();
   };
 

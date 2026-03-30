@@ -14,21 +14,14 @@ BLUE='\033[0;34m'
 RED='\033[0;31m'
 NC='\033[0m' # No Color
 
-# Check if MongoDB is already running
+# Check if MongoDB is already running (via Docker or local)
 if lsof -i :27017 >/dev/null 2>&1; then
     echo -e "${GREEN}✓${NC} MongoDB already running on port 27017"
 else
-    echo -e "${BLUE}→${NC} Starting MongoDB..."
-    mkdir -p /tmp/nexboard-mongodb
-    mongod --dbpath /tmp/nexboard-mongodb --port 27017 --bind_ip 127.0.0.1 --logpath /tmp/mongodb.log --fork >/dev/null 2>&1
-    sleep 2
-    
-    if lsof -i :27017 >/dev/null 2>&1; then
-        echo -e "${GREEN}✓${NC} MongoDB started on port 27017"
-    else
-        echo -e "${RED}✗${NC} Failed to start MongoDB"
-        exit 1
-    fi
+    echo -e "${RED}✗${NC} MongoDB not running on port 27017"
+    echo -e "${BLUE}→${NC} Please start MongoDB with Docker Compose:"
+    echo -e "   ${BLUE}docker-compose up -d${NC}"
+    exit 1
 fi
 
 # Check if backend is already running
@@ -56,7 +49,7 @@ echo -e "${GREEN}✅ NexBoard Development Environment Ready!${NC}"
 echo "═══════════════════════════════════════════════════════"
 echo ""
 echo "Services:"
-echo "  • MongoDB:  http://localhost:27017"
+echo "  • MongoDB:  mongodb://localhost:27017 (Docker)"
 echo "  • Backend:  http://localhost:5000"
 echo "  • Frontend: http://localhost:3000 (start separately)"
 echo ""
@@ -65,10 +58,11 @@ echo "  • Health:   http://localhost:5000/api/health"
 echo "  • Auth:     http://localhost:3000/auth"
 echo ""
 echo "Logs:"
-echo "  • MongoDB:  /tmp/mongodb.log"
+echo "  • MongoDB:  Check 'docker logs nexboard-mongo'"
 echo "  • Backend:  /tmp/nexboard-server.log"
 echo ""
-echo "To stop services:"
-echo "  • MongoDB:  kill \$(lsof -ti :27017)"
-echo "  • Backend:  kill \$(lsof -ti :5000)"
+echo "To manage Docker containers:"
+echo "  • Start:    docker-compose up -d"
+echo "  • Stop:     docker-compose down"
+echo "  • Logs:     docker-compose logs -f"
 echo ""

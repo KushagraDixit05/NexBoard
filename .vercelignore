@@ -1,0 +1,6 @@
+node_modules
+server
+Documentation
+.git
+.env
+*.log

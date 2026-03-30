@@ -1,5 +1,7 @@
 const User = require('../models/User');
 const { hashPassword } = require('../utils/password');
+const activityService = require('../services/activity.service');
+const mongoose = require('mongoose');
 
 // GET /api/users — Admin only
 const getAllUsers = async (req, res, next) => {
@@ -133,4 +135,88 @@ const searchUsers = async (req, res, next) => {
   }
 };
 
-module.exports = { getAllUsers, getUserById, updateProfile, updatePreferences, changeRole, deactivateUser, deleteUser, searchUsers };
+// GET /api/users/activity/heatmap — Get user's activity heatmap data
+const getUserActivityHeatmap = async (req, res, next) => {
+  try {
+    const userId = new mongoose.Types.ObjectId(req.user._id);
+    
+    // Get current year boundaries - full year from Jan 1 to Dec 31 (UTC)
+    const now = new Date();
+    const currentYear = now.getUTCFullYear();
+    const startDate = new Date(Date.UTC(currentYear, 0, 1)); // Jan 1, 00:00 UTC
+    const endDate = new Date(Date.UTC(currentYear, 11, 31, 23, 59, 59)); // Dec 31, 23:59:59 UTC
+    
+    // Fetch activity data from service (only fetch actual data up to today)
+    const activities = await activityService.getUserHeatmapData(userId, startDate, now);
+    
+    // Create a map for quick lookup
+    const activityMap = new Map();
+    activities.forEach(item => {
+      activityMap.set(item.date, item.count);
+    });
+    
+    // Calculate max count for level calculation
+    const counts = activities.map(a => a.count);
+    const maxCount = counts.length > 0 ? Math.max(...counts) : 1;
+    const maxLevel = 4;
+    
+    // Generate all days from start of year to end of year
+    const allDays = [];
+    const currentDate = new Date(startDate);
+    
+    while (currentDate <= endDate) {
+      const dateStr = currentDate.toISOString().split('T')[0]; // YYYY-MM-DD
+      const count = activityMap.get(dateStr) || 0;
+      const level = count === 0 ? 0 : Math.max(1, Math.ceil((count / maxCount) * maxLevel));
+      
+      allDays.push({
+        date: dateStr,
+        count,
+        level
+      });
+      
+      // Increment by 1 day
+      currentDate.setUTCDate(currentDate.getUTCDate() + 1);
+    }
+    
+    // Calculate total count
+    const totalCount = activities.reduce((sum, item) => sum + item.count, 0);
+    
+    // Calculate current streak (consecutive days with activity ending at today)
+    let currentStreak = 0;
+    const today = now.toISOString().split('T')[0];
+    
+    // Find today's index in allDays
+    const todayIndex = allDays.findIndex(day => day.date === today);
+    
+    if (todayIndex >= 0) {
+      for (let i = todayIndex; i >= 0; i--) {
+        if (allDays[i].count > 0) {
+          currentStreak++;
+        } else {
+          break;
+        }
+      }
+    }
+    
+    res.json({
+      data: allDays,
+      totalCount,
+      currentStreak
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { 
+  getAllUsers, 
+  getUserById, 
+  updateProfile, 
+  updatePreferences, 
+  changeRole, 
+  deactivateUser, 
+  deleteUser, 
+  searchUsers,
+  getUserActivityHeatmap
+};

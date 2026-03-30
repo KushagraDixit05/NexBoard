@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react';
 import { useAuthStore } from '@/store/authStore';
 import api from '@/lib/api';
-import { User, Bell, Mail, Webhook } from 'lucide-react';
+import { User, Bell, Mail, Webhook, Activity } from 'lucide-react';
+import { ActivityHeatmap } from '@/components/activity/ActivityHeatmap';
 
 export default function SettingsPage() {
   const { user, updateProfile } = useAuthStore();
@@ -159,6 +160,19 @@ export default function SettingsPage() {
             </button>
           </div>
         </form>
+      </div>
+
+      {/* Activity Overview Section */}
+      <div className="card p-6">
+        <div className="flex items-center gap-3 mb-6">
+          <Activity className="w-5 h-5 text-primary" />
+          <div>
+            <h2 className="text-lg font-semibold text-foreground">Activity Overview</h2>
+            <p className="text-xs text-muted-foreground mt-0.5">Your task completion activity this year</p>
+          </div>
+        </div>
+        
+        <ActivityHeatmap />
       </div>
 
       {/* Notification Preferences Section */}
