@@ -1,5 +1,8 @@
 'use client';
 
+// Get API URL from environment variable, removing '/api' suffix if present
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:5000';
+
 export default function AuthPage() {
   return (
     <div className="w-full max-w-lg p-10 flex flex-col items-center pointer-events-auto glass-card animate-fade-scale transition-shadow duration-500 hover:shadow-[0_8px_32px_0_rgba(255,255,255,0.05)]">
@@ -19,7 +22,7 @@ export default function AuthPage() {
       {/* OAuth Buttons Container */}
       <div className="grid grid-cols-2 gap-4 w-full mb-8">
         <a
-          href="http://localhost:5000/api/auth/github"
+          href={`${API_BASE_URL}/api/auth/github`}
           className="flex items-center justify-center gap-3 py-3 px-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 transition-all shadow-sm"
         >
           <svg viewBox="0 0 24 24" className="w-[18px] h-[18px] text-[#A1A1A5]" fill="currentColor">
@@ -28,7 +31,7 @@ export default function AuthPage() {
           <span className="text-[#E4E4E5] text-[14px] font-medium tracking-tight">Login with GitHub</span>
         </a>
         <a
-          href="http://localhost:5000/api/auth/google"
+          href={`${API_BASE_URL}/api/auth/google`}
           className="flex items-center justify-center gap-3 py-3 px-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 transition-all shadow-sm"
         >
           <svg viewBox="0 0 24 24" className="w-[18px] h-[18px]" fill="none" xmlns="http://www.w3.org/2000/svg">
