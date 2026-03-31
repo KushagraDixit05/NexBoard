@@ -14,22 +14,28 @@ export default function AdminUsersPage() {
   const [deactivating, setDeactivating] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const fetchUsers = () => {
-    const q = search ? `?search=${encodeURIComponent(search)}` : '';
-    api.get(`/users${q}`).then(r => setUsers(r.data.users ?? r.data)).finally(() => setLoading(false));
-  };
+  useEffect(() => {
+    const fetchUsers = () => {
+      const q = search ? `?search=${encodeURIComponent(search)}` : '';
+      api.get(`/users${q}`).then(r => setUsers(r.data.users ?? r.data)).finally(() => setLoading(false));
+    };
+    fetchUsers();
+  }, [search]);
 
-  useEffect(() => { fetchUsers(); }, []);
+  const refetchUsers = () => {
+    const q = search ? `?search=${encodeURIComponent(search)}` : '';
+    api.get(`/users${q}`).then(r => setUsers(r.data.users ?? r.data));
+  };
 
   const handleRoleChange = async (userId: string, role: string) => {
     await api.patch(`/users/${userId}/role`, { role });
-    fetchUsers();
+    refetchUsers();
   };
 
   const handleDeactivate = async (userId: string) => {
     await api.patch(`/users/${userId}/deactivate`);
     setDeactivating(null);
-    fetchUsers();
+    refetchUsers();
   };
 
   return (
@@ -44,8 +50,7 @@ export default function AdminUsersPage() {
       <div className="card overflow-hidden">
         <div className="p-4 border-b border-border">
           <input className="input-field max-w-sm" placeholder="Search users..."
-                 value={search} onChange={e => setSearch(e.target.value)}
-                 onKeyDown={e => e.key === 'Enter' && fetchUsers()} />
+                 value={search} onChange={e => setSearch(e.target.value)} />
         </div>
         <div className="divide-y divide-border">
           {loading ? (

@@ -17,14 +17,18 @@ export default function ProjectMembersPage() {
   const [showAdd, setShowAdd]       = useState(false);
   const [removing, setRemoving]     = useState<string | null>(null);
 
-  const fetchProject = () =>
-    api.get(`/projects/${projectId}`).then(({ data }) => setProject(data));
+  useEffect(() => {
+    const fetchProject = () =>
+      api.get(`/projects/${projectId}`).then(({ data }) => setProject(data));
+    fetchProject();
+  }, [projectId]);
 
-  useEffect(() => { fetchProject(); }, [projectId]);
+  const refetchProject = () =>
+    api.get(`/projects/${projectId}`).then(({ data }) => setProject(data));
 
   const handleRemoveMember = async (userId: string) => {
     await api.delete(`/projects/${projectId}/members/${userId}`);
-    fetchProject();
+    refetchProject();
     setRemoving(null);
   };
 
@@ -65,7 +69,7 @@ export default function ProjectMembersPage() {
       <Modal isOpen={showAdd} onClose={() => setShowAdd(false)} title="Add Member">
         <AddMemberDialog
           projectId={projectId}
-          onSuccess={() => { setShowAdd(false); fetchProject(); }}
+          onSuccess={() => { setShowAdd(false); refetchProject(); }}
           onCancel={() => setShowAdd(false)}
         />
       </Modal>

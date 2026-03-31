@@ -15,13 +15,19 @@ export default function ProjectsListPage() {
   const [showCreate, setShowCreate] = useState(false);
   const [view, setView] = useState<'active' | 'archived'>('active');
 
-  const fetchProjects = () => {
-    setLoading(true);
-    const archiveParam = view === 'archived' ? '?archived=true' : '';
-    api.get(`/projects${archiveParam}`).then(({ data }) => setProjects(data)).finally(() => setLoading(false));
-  };
+  useEffect(() => {
+    const fetchProjects = () => {
+      setLoading(true);
+      const archiveParam = view === 'archived' ? '?archived=true' : '';
+      api.get(`/projects${archiveParam}`).then(({ data }) => setProjects(data)).finally(() => setLoading(false));
+    };
+    fetchProjects();
+  }, [view]);
 
-  useEffect(() => { fetchProjects(); }, [view]);
+  const refetchProjects = () => {
+    const archiveParam = view === 'archived' ? '?archived=true' : '';
+    api.get(`/projects${archiveParam}`).then(({ data }) => setProjects(data));
+  };
 
   return (
     <div className="space-y-6">
@@ -80,7 +86,7 @@ export default function ProjectsListPage() {
 
       <Modal isOpen={showCreate} onClose={() => setShowCreate(false)} title="Create Project">
         <ProjectForm
-          onSuccess={() => { setShowCreate(false); fetchProjects(); }}
+          onSuccess={() => { setShowCreate(false); refetchProjects(); }}
           onCancel={() => setShowCreate(false)}
         />
       </Modal>

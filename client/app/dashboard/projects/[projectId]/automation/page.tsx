@@ -21,27 +21,39 @@ export default function AutomationPage() {
   const [error, setError] = useState<string | null>(null);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
-  const fetchRules = async () => {
+  useEffect(() => {
+    const fetchRules = async () => {
+      try {
+        setIsLoading(true);
+        const { data } = await api.get(`/automation/project/${projectId}`);
+        setRules(data);
+      } catch (err: any) {
+        console.error('Failed to fetch automation rules:', err);
+        setError(err.response?.data?.message || 'Failed to load automation rules');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchRules();
+  }, [projectId]);
+
+  const refetchRules = async () => {
     try {
       setIsLoading(true);
       const { data } = await api.get(`/automation/project/${projectId}`);
       setRules(data);
+      setIsLoading(false);
     } catch (err: any) {
       console.error('Failed to fetch automation rules:', err);
       setError(err.response?.data?.message || 'Failed to load automation rules');
-    } finally {
       setIsLoading(false);
     }
   };
 
-  useEffect(() => {
-    fetchRules();
-  }, [projectId]);
-
   const handleToggle = async (ruleId: string) => {
     try {
       await api.patch(`/automation/${ruleId}/toggle`);
-      await fetchRules();
+      await refetchRules();
     } catch (error) {
       console.error('Failed to toggle rule:', error);
     }
@@ -54,13 +66,13 @@ export default function AutomationPage() {
     actions: Record<string, any>[];
   }) => {
     await api.post('/automation', { ...data, project: projectId });
-    await fetchRules();
+    await refetchRules();
   };
 
   const handleDelete = async (ruleId: string) => {
     try {
       await api.delete(`/automation/${ruleId}`);
-      await fetchRules();
+      await refetchRules();
     } catch (error) {
       console.error('Failed to delete rule:', error);
     }
