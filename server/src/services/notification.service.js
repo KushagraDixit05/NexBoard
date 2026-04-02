@@ -1,9 +1,12 @@
 const Notification = require('../models/Notification');
+const User         = require('../models/User');
+const webhookService = require('./webhook.service');
 const eventEmitter = require('./eventEmitter.service');
 
 const notificationService = {
   /**
    * Create an in-app notification for a user.
+   * Also fires the user's configured webhook URL if present.
    */
   async create({ userId, type, title, message, link, data }) {
     try {
@@ -15,6 +18,23 @@ const notificationService = {
         link,
         data,
       });
+
+      // Fire outgoing webhook if the user has one configured
+      setImmediate(async () => {
+        try {
+          const user = await User.findById(userId).select('notificationPreferences displayName username');
+          const webhookUrl = user?.notificationPreferences?.webhookUrl;
+          if (webhookUrl) {
+            await webhookService.sendSlack(webhookUrl, {
+              text: `*${title}*\n${message}`,
+              fields: link ? [{ title: 'View', value: link }] : [],
+            });
+          }
+        } catch (err) {
+          console.error('[NotificationService] Webhook fire failed:', err.message);
+        }
+      });
+
       return notification;
     } catch (error) {
       console.error('[NotificationService] Create failed:', error.message);
@@ -68,17 +88,43 @@ eventEmitter.on('task.assign', async ({ task, assignee }) => {
   });
 });
 
-eventEmitter.on('comment.create', async ({ comment, task, mentions }) => {
-  if (!mentions || mentions.length === 0) return;
-  for (const userId of mentions) {
+eventEmitter.on('comment.create', async ({ comment, task, user, mentions }) => {
+  if (!task) return;
+
+  // 1. Notify @mentioned users
+  if (mentions && mentions.length > 0) {
+    for (const userId of mentions) {
+      // Don't notify the commenter about their own mention
+      if (String(userId) === String(user._id)) continue;
+      await notificationService.create({
+        userId,
+        type:    'task_mentioned',
+        title:   'You were mentioned',
+        message: `You were mentioned in a comment on "${task.title}"`,
+        link:    `/projects/${task.project}/board`,
+        data:    { taskId: task._id, commentId: comment._id },
+      });
+    }
+  }
+
+  // 2. Notify the task's assignee (if they're not the commenter and not already mentioned)
+  const mentionSet = new Set((mentions || []).map(String));
+  const commenterId = String(user._id);
+
+  const interestedUsers = [task.assignee, task.creator].filter(Boolean);
+  for (const recipientId of interestedUsers) {
+    const rid = String(recipientId);
+    if (rid === commenterId) continue;       // Skip the commenter themselves
+    if (mentionSet.has(rid)) continue;       // Already notified via @mention
     await notificationService.create({
-      userId,
-      type:    'task_mentioned',
-      title:   'You were mentioned',
-      message: `You were mentioned in a comment on "${task.title}"`,
+      userId:  recipientId,
+      type:    'task_commented',
+      title:   'New comment on your task',
+      message: `${user.displayName || user.username} commented on "${task.title}"`,
       link:    `/projects/${task.project}/board`,
       data:    { taskId: task._id, commentId: comment._id },
     });
+    mentionSet.add(rid); // Prevent duplicate if assignee === creator
   }
 });
 

@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/authStore';
+import { useNotificationStore } from '@/store/notificationStore';
 import {
   LayoutDashboard, FolderKanban, Bell, Settings, Users, LogOut, ChevronLeft, ChevronRight,
 } from 'lucide-react';
@@ -24,6 +25,7 @@ export default function Sidebar() {
   const pathname = usePathname();
   const router   = useRouter();
   const { user, logout } = useAuthStore();
+  const { unreadCount }  = useNotificationStore();
   const [collapsed, setCollapsed] = useState(false);
 
   const handleLogout = async () => {
@@ -60,7 +62,15 @@ export default function Sidebar() {
                     : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
                   }`}
                 title={collapsed ? item.name : undefined}>
-            <item.icon className="w-5 h-5 flex-shrink-0" />
+            <span className="relative">
+              <item.icon className="w-5 h-5 flex-shrink-0" />
+              {item.href === '/dashboard/notifications' && unreadCount > 0 && (
+                <span className="absolute -top-1 -right-1 min-w-[14px] h-[14px] bg-destructive text-destructive-foreground
+                                 text-[9px] rounded-full flex items-center justify-center px-0.5 font-medium">
+                  {unreadCount > 9 ? '9+' : unreadCount}
+                </span>
+              )}
+            </span>
             {!collapsed && <span>{item.name}</span>}
           </Link>
         ))}

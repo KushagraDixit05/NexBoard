@@ -21,6 +21,8 @@ export default function SettingsPage() {
   const [inAppNotif, setInAppNotif] = useState(true);
   const [digest, setDigest] = useState<'none' | 'daily' | 'weekly'>('none');
   const [webhookUrl, setWebhookUrl] = useState('');
+  const [webhookTesting, setWebhookTesting] = useState(false);
+  const [webhookStatus, setWebhookStatus] = useState<'idle' | 'ok' | 'error'>('idle');
 
   useEffect(() => {
     if (user) {
@@ -59,7 +61,7 @@ export default function SettingsPage() {
     setLoading(true);
 
     try {
-      const { data } = await api.put('/users/preferences', {
+      await api.put('/users/preferences', {
         notificationPreferences: {
           email: emailNotif,
           inApp: inAppNotif,
@@ -67,13 +69,30 @@ export default function SettingsPage() {
           webhookUrl: webhookUrl.trim() || undefined,
         },
       });
-      // Manually update user state for preferences
       await useAuthStore.getState().fetchMe();
       setSuccess('Notification preferences updated successfully!');
     } catch (err: unknown) {
       setError((err as { response?: { data?: { error?: string } } })?.response?.data?.error ?? 'Failed to update preferences');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleTestWebhook = async () => {
+    if (!webhookUrl.trim()) {
+      setError('Please enter a Webhook URL before testing.');
+      return;
+    }
+    setWebhookTesting(true);
+    setWebhookStatus('idle');
+    setError('');
+    try {
+      await api.post('/webhooks/test', { url: webhookUrl.trim() });
+      setWebhookStatus('ok');
+    } catch {
+      setWebhookStatus('error');
+    } finally {
+      setWebhookTesting(false);
     }
   };
 
@@ -240,14 +259,30 @@ export default function SettingsPage() {
               <Webhook className="w-4 h-4" />
               Webhook URL (Optional)
             </label>
-            <input
-              type="url"
-              className="input-field"
-              value={webhookUrl}
-              onChange={(e) => setWebhookUrl(e.target.value)}
-              placeholder="https://your-webhook-url.com/endpoint"
-            />
-            <p className="text-xs text-muted-foreground mt-1">Send notifications to this webhook endpoint</p>
+            <div className="flex gap-2">
+              <input
+                type="url"
+                className="input-field flex-1"
+                value={webhookUrl}
+                onChange={(e) => { setWebhookUrl(e.target.value); setWebhookStatus('idle'); }}
+                placeholder="https://hooks.slack.com/services/... or https://discord.com/api/webhooks/..."
+              />
+              <button
+                type="button"
+                onClick={handleTestWebhook}
+                disabled={webhookTesting || !webhookUrl.trim()}
+                className="btn-secondary shrink-0 text-sm"
+              >
+                {webhookTesting ? 'Sending…' : 'Test'}
+              </button>
+            </div>
+            {webhookStatus === 'ok' && (
+              <p className="text-xs text-success mt-1">✓ Test payload delivered successfully!</p>
+            )}
+            {webhookStatus === 'error' && (
+              <p className="text-xs text-destructive mt-1">✗ Delivery failed. Check the URL and try again.</p>
+            )}
+            <p className="text-xs text-muted-foreground mt-1">Supports Slack, Discord, and any JSON webhook endpoint.</p>
           </div>
 
           <div className="flex justify-end">

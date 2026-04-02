@@ -1,24 +1,28 @@
 const Comment = require('../models/Comment');
+const Task    = require('../models/Task');
 const eventEmitter = require('../services/eventEmitter.service');
 const activityService = require('../services/activity.service');
 
 // POST /api/comments
 const createComment = async (req, res, next) => {
   try {
-    const { task, content, mentions } = req.body;
+    const { task: taskId, content, mentions } = req.body;
 
     const comment = await Comment.create({
-      task, user: req.user._id, content, mentions,
+      task: taskId, user: req.user._id, content, mentions,
     });
 
-    const populated = await Comment.findById(comment._id)
-      .populate('user', 'username displayName avatar')
-      .populate('mentions', 'username displayName');
+    const [populated, taskDoc] = await Promise.all([
+      Comment.findById(comment._id)
+        .populate('user', 'username displayName avatar')
+        .populate('mentions', 'username displayName'),
+      Task.findById(taskId).select('title project assignee creator'),
+    ]);
 
     eventEmitter.emit('comment.create', {
-      comment: populated,
-      task:    { _id: task },
-      user:    req.user,
+      comment:  populated,
+      task:     taskDoc,   // full document — title & project now available
+      user:     req.user,
       mentions: mentions || [],
     });
 

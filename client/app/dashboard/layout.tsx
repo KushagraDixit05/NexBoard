@@ -3,16 +3,26 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/authStore';
+import { useNotificationStore } from '@/store/notificationStore';
 import Sidebar from '@/components/ui/Sidebar';
 import Header from '@/components/ui/Header';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isLoading, fetchMe } = useAuthStore();
+  const { fetchNotifications } = useNotificationStore();
   const router = useRouter();
 
   useEffect(() => {
     fetchMe();
   }, [fetchMe]);
+
+  // Fetch notifications on mount and poll every 30 seconds
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    fetchNotifications();
+    const interval = setInterval(fetchNotifications, 30_000);
+    return () => clearInterval(interval);
+  }, [isAuthenticated, fetchNotifications]);
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {

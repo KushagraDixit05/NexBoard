@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useNotificationStore } from '@/store/notificationStore';
 import type { AppNotification } from '@/store/notificationStore';
 import { formatDistanceToNow } from 'date-fns';
@@ -10,6 +11,7 @@ export default function NotificationsPage() {
   const { notifications, markAsRead, markAllRead, fetchNotifications } = useNotificationStore();
   const [filter, setFilter] = useState<'all' | 'unread'>('all');
   const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     fetchNotifications().finally(() => setIsLoading(false));
@@ -23,6 +25,11 @@ export default function NotificationsPage() {
 
   const handleMarkAsRead = async (id: string) => {
     await markAsRead(id);
+  };
+
+  const handleNotificationClick = async (notification: AppNotification) => {
+    if (!notification.isRead) await markAsRead(notification._id);
+    if (notification.link) router.push(notification.link);
   };
 
   const handleMarkAllRead = async () => {
@@ -137,7 +144,10 @@ export default function NotificationsPage() {
           {filteredNotifications.map(notification => (
             <div
               key={notification._id}
+              onClick={() => handleNotificationClick(notification)}
               className={`card p-4 transition-colors ${
+                notification.link ? 'cursor-pointer hover:bg-accent/70' : ''
+              } ${
                 notification.isRead ? 'bg-card' : 'bg-accent/50 border-accent'
               }`}
             >
